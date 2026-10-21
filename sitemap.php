@@ -6,6 +6,12 @@ require_once __DIR__ . '/config/config.php';
 $baseUrl = rtrim(SITE_URL, '/');
 $currentDate = date('Y-m-d');
 
+// Returns the file's real last-modified date, falling back to $currentDate.
+function palakkad_lm($file, $fallback) {
+    $m = @filemtime(__DIR__ . '/' . ltrim($file, '/'));
+    return $m ? date('Y-m-d', $m) : $fallback;
+}
+
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/config/url_helper.php';
 
@@ -94,15 +100,15 @@ if ($conn && !$conn->connect_error) {
     <!-- Homepage -->
     <url>
         <loc><?php echo $baseUrl; ?>/</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('index.php', $currentDate); ?></lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
-    
+
     <!-- About Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/about.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('about.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -110,47 +116,47 @@ if ($conn && !$conn->connect_error) {
     <!-- How to Reach Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/how-to-reach.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('how-to-reach.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.82</priority>
     </url>
-    
+
     <!-- Art and Culture Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/art-culture.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('art-culture.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- Customs Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/customs.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('customs.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- Villages and Taluks Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/villages-taluks.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('villages-taluks.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- History Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/history.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('history.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- Fort Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/fort.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('fort.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -208,15 +214,15 @@ if ($conn && !$conn->connect_error) {
     <!-- Rivers Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/rivers.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('rivers.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- Mountain Ranges & Passes Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/mountain-ranges-passes.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('mountain-ranges-passes.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -260,55 +266,55 @@ if ($conn && !$conn->connect_error) {
     <!-- Temples -->
     <url>
         <loc><?php echo $baseUrl; ?>/temples.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('temples.php', $currentDate); ?></lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    
+
     <!-- Churches -->
     <url>
         <loc><?php echo $baseUrl; ?>/churches.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('churches.php', $currentDate); ?></lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    
+
     <!-- Mosques -->
     <url>
         <loc><?php echo $baseUrl; ?>/mosques.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('mosques.php', $currentDate); ?></lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    
+
     <!-- Jain Temple -->
     <url>
         <loc><?php echo $baseUrl; ?>/jain-temple.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('jain-temple.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.85</priority>
     </url>
-    
+
     <!-- Festivals -->
     <url>
         <loc><?php echo $baseUrl; ?>/festivals.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('festivals.php', $currentDate); ?></lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    
+
     <!-- Places to Visit -->
     <url>
         <loc><?php echo $baseUrl; ?>/places.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('places.php', $currentDate); ?></lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    
+
     <!-- Heritage Villages Page -->
     <url>
         <loc><?php echo $baseUrl; ?>/heritage-villages.php</loc>
-        <lastmod><?php echo $currentDate; ?></lastmod>
+        <lastmod><?php echo palakkad_lm('heritage-villages.php', $currentDate); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

@@ -80,6 +80,7 @@
     } else {
         $messengerFile = __DIR__ . '/messenger_chat.php';
         if (is_readable($messengerFile)) {
+            echo '<div id="fb-root"></div>';
             require_once $messengerFile;
             if (function_exists('initMessengerChat')) {
                 initMessengerChat('palakkadtourism');

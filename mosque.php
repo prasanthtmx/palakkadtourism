@@ -23,37 +23,28 @@ $breadcrumbs = [
 require_once __DIR__ . '/includes/header.php';
 ?>
 <!-- Mosque-specific Structured Data -->
+<?php
+$_address = [
+    '@type'           => 'PostalAddress',
+    'addressLocality' => $mosque['location'] ?? 'Palakkad',
+    'addressRegion'   => 'Kerala',
+    'addressCountry'  => 'IN',
+];
+if (!empty($mosque['address'])) $_address['streetAddress'] = $mosque['address'];
+$_mosqueSchema = [
+    '@context'    => 'https://schema.org',
+    '@type'       => 'PlaceOfWorship',
+    'name'        => $mosque['name'],
+    'description' => strip_tags($mosque['description'] ?? ''),
+    'url'         => $seoCanonicalUrl,
+    'address'     => $_address,
+];
+if (!empty($mosque['image_url'])) $_mosqueSchema['image']        = $mosque['image_url'];
+if (!empty($mosque['timings']))   $_mosqueSchema['openingHours'] = $mosque['timings'];
+if (!empty($mosque['contact']))   $_mosqueSchema['telephone']    = $mosque['contact'];
+?>
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "PlaceOfWorship",
-    "name": "<?php echo htmlspecialchars($mosque['name']); ?>",
-    "description": "<?php echo htmlspecialchars($mosque['description']); ?>",
-    "url": <?php echo json_encode($seoCanonicalUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-    <?php if ($mosque['image_url']): ?>
-    "image": "<?php echo htmlspecialchars($mosque['image_url']); ?>",
-    <?php endif; ?>
-    "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "<?php echo htmlspecialchars($mosque['location'] ?? 'Palakkad'); ?>",
-        "addressRegion": "Kerala",
-        "addressCountry": "IN"
-        <?php if ($mosque['address']): ?>
-        ,"streetAddress": "<?php echo htmlspecialchars($mosque['address']); ?>"
-        <?php endif; ?>
-    },
-    "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "10.7867",
-        "longitude": "76.6548"
-    }
-    <?php if ($mosque['timings']): ?>
-    ,"openingHours": "<?php echo htmlspecialchars($mosque['timings']); ?>"
-    <?php endif; ?>
-    <?php if ($mosque['contact']): ?>
-    ,"telephone": "<?php echo htmlspecialchars($mosque['contact']); ?>"
-    <?php endif; ?>
-}
+<?php echo json_encode($_mosqueSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
 </script>
 
 <section class="py-5 mt-5">

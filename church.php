@@ -23,37 +23,28 @@ $breadcrumbs = [
 require_once __DIR__ . '/includes/header.php';
 ?>
 <!-- Church-specific Structured Data -->
+<?php
+$_address = [
+    '@type'           => 'PostalAddress',
+    'addressLocality' => $church['location'] ?? 'Palakkad',
+    'addressRegion'   => 'Kerala',
+    'addressCountry'  => 'IN',
+];
+if (!empty($church['address'])) $_address['streetAddress'] = $church['address'];
+$_churchSchema = [
+    '@context'    => 'https://schema.org',
+    '@type'       => 'PlaceOfWorship',
+    'name'        => $church['name'],
+    'description' => strip_tags($church['description'] ?? ''),
+    'url'         => $seoCanonicalUrl,
+    'address'     => $_address,
+];
+if (!empty($church['image_url'])) $_churchSchema['image']        = $church['image_url'];
+if (!empty($church['timings']))   $_churchSchema['openingHours'] = $church['timings'];
+if (!empty($church['contact']))   $_churchSchema['telephone']    = $church['contact'];
+?>
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "PlaceOfWorship",
-    "name": "<?php echo htmlspecialchars($church['name']); ?>",
-    "description": "<?php echo htmlspecialchars($church['description']); ?>",
-    "url": <?php echo json_encode($seoCanonicalUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-    <?php if ($church['image_url']): ?>
-    "image": "<?php echo htmlspecialchars($church['image_url']); ?>",
-    <?php endif; ?>
-    "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "<?php echo htmlspecialchars($church['location'] ?? 'Palakkad'); ?>",
-        "addressRegion": "Kerala",
-        "addressCountry": "IN"
-        <?php if ($church['address']): ?>
-        ,"streetAddress": "<?php echo htmlspecialchars($church['address']); ?>"
-        <?php endif; ?>
-    },
-    "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "10.7867",
-        "longitude": "76.6548"
-    }
-    <?php if ($church['timings']): ?>
-    ,"openingHours": "<?php echo htmlspecialchars($church['timings']); ?>"
-    <?php endif; ?>
-    <?php if ($church['contact']): ?>
-    ,"telephone": "<?php echo htmlspecialchars($church['contact']); ?>"
-    <?php endif; ?>
-}
+<?php echo json_encode($_churchSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
 </script>
 
 <section class="py-5 mt-5">

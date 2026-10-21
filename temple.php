@@ -23,37 +23,28 @@ $breadcrumbs = [
 require_once __DIR__ . '/includes/header.php';
 ?>
 <!-- Temple-specific Structured Data -->
+<?php
+$_address = [
+    '@type'           => 'PostalAddress',
+    'addressLocality' => $temple['location'] ?? 'Palakkad',
+    'addressRegion'   => 'Kerala',
+    'addressCountry'  => 'IN',
+];
+if (!empty($temple['address'])) $_address['streetAddress'] = $temple['address'];
+$_templeSchema = [
+    '@context'    => 'https://schema.org',
+    '@type'       => 'PlaceOfWorship',
+    'name'        => $temple['name'],
+    'description' => strip_tags($temple['description'] ?? ''),
+    'url'         => $seoCanonicalUrl,
+    'address'     => $_address,
+];
+if (!empty($temple['image_url'])) $_templeSchema['image']        = $temple['image_url'];
+if (!empty($temple['timings']))   $_templeSchema['openingHours'] = $temple['timings'];
+if (!empty($temple['contact']))   $_templeSchema['telephone']    = $temple['contact'];
+?>
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "PlaceOfWorship",
-    "name": "<?php echo htmlspecialchars($temple['name']); ?>",
-    "description": "<?php echo htmlspecialchars($temple['description']); ?>",
-    "url": <?php echo json_encode($seoCanonicalUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-    <?php if ($temple['image_url']): ?>
-    "image": "<?php echo htmlspecialchars($temple['image_url']); ?>",
-    <?php endif; ?>
-    "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "<?php echo htmlspecialchars($temple['location'] ?? 'Palakkad'); ?>",
-        "addressRegion": "Kerala",
-        "addressCountry": "IN"
-        <?php if ($temple['address']): ?>
-        ,"streetAddress": "<?php echo htmlspecialchars($temple['address']); ?>"
-        <?php endif; ?>
-    },
-    "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "10.7867",
-        "longitude": "76.6548"
-    }
-    <?php if ($temple['timings']): ?>
-    ,"openingHours": "<?php echo htmlspecialchars($temple['timings']); ?>"
-    <?php endif; ?>
-    <?php if ($temple['contact']): ?>
-    ,"telephone": "<?php echo htmlspecialchars($temple['contact']); ?>"
-    <?php endif; ?>
-}
+<?php echo json_encode($_templeSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
 </script>
 
 <section class="py-5 mt-5">

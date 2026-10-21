@@ -64,7 +64,7 @@ if (!defined('STYLE_CSS_V')) {
 date_default_timezone_set('Asia/Kolkata');
 
 // Error reporting (set to 0 in production)
-error_reporting(E_ALL);
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 ini_set('display_errors', 0); // Disable error display in production
 ini_set('log_errors', 1); // Log errors instead
 ini_set('error_log', __DIR__ . '/../logs/php_errors.log');

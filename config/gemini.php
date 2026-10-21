@@ -17,11 +17,17 @@ if (!defined('GEMINI_API_KEY')) {
     define('GEMINI_API_KEY', '');
 }
 if (!defined('GEMINI_MODEL')) {
-    define('GEMINI_MODEL', 'gemini-2.0-flash');
+    define('GEMINI_MODEL', 'gemini-3.8-flash');
 }
 if (!defined('GEMINI_MAX_OUTPUT_TOKENS')) {
     define('GEMINI_MAX_OUTPUT_TOKENS', 512);
 }
 if (!defined('GEMINI_RATE_PER_HOUR')) {
     define('GEMINI_RATE_PER_HOUR', 20);
+}
+if (!defined('GEMINI_CACHE_TTL')) {
+    define('GEMINI_CACHE_TTL', 14 * 86400);
+}
+if (!defined('GEMINI_CACHE_MAX')) {
+    define('GEMINI_CACHE_MAX', 400);
 }

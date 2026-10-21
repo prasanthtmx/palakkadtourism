@@ -133,7 +133,7 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
             },
             
             // Enhanced Ecommerce (if needed)
-            'send_page_view': true,
+            'send_page_view': false,
             'anonymize_ip': false,
             'cookie_flags': 'SameSite=None;Secure',
             
@@ -246,31 +246,22 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
     
     // Article Schema for content pages
     if (in_array($schemaPageSlug, ['about', 'history', 'rivers', 'mountain-ranges-passes', 'art-culture', 'customs', 'fort'])) {
-        $pageSchema .= ',
-    {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": "' . (isset($pageTitle) ? htmlspecialchars($pageTitle) : 'Palakkad Tourism') . '",
-        "description": "' . (isset($pageDescription) ? htmlspecialchars($pageDescription) : '') . '",
-        "author": {
-            "@type": "Organization",
-            "name": "Palakkad Tourism"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "Palakkad Tourism",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "' . SITE_URL . BASE_PATH . '/assets/images/palakkad-logo.png"
-            }
-        },
-        "datePublished": "' . $seoArticlePublished . '",
-        "dateModified": "' . $seoArticleModified . '",
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": ' . json_encode($seoCanonicalUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '
-        }
-    }';
+        $articleSchema = [
+            '@context'         => 'https://schema.org',
+            '@type'            => 'Article',
+            'headline'         => isset($pageTitle) ? $pageTitle : 'Palakkad Tourism',
+            'description'      => isset($pageDescription) ? $pageDescription : '',
+            'author'           => ['@type' => 'Organization', 'name' => 'Palakkad Tourism'],
+            'publisher'        => [
+                '@type' => 'Organization',
+                'name'  => 'Palakkad Tourism',
+                'logo'  => ['@type' => 'ImageObject', 'url' => SITE_URL . BASE_PATH . '/assets/images/palakkad-logo.png'],
+            ],
+            'datePublished'    => $seoArticlePublished,
+            'dateModified'     => $seoArticleModified,
+            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $seoCanonicalUrl],
+        ];
+        $pageSchema .= ',' . json_encode($articleSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
     
     $webPageType = 'WebPage';
@@ -302,10 +293,6 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
     ]
     </script>
     
-    <!-- Facebook SDK for JavaScript (for Facebook embeds) -->
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
-
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8043296707059876"
          crossorigin="anonymous"></script>

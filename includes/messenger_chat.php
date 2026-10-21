@@ -23,7 +23,6 @@ function displayMessengerChat($pageId = 'palakkadtourism', $appId = '', $locale 
     }
     ?>
     <!-- Messenger Chat Plugin Code -->
-    <!-- Note: fb-root div is already in header, so we don't need to create it again -->
     
     <!-- Your Chat Plugin code -->
     <div id="fb-customer-chat" class="fb-customerchat"

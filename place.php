@@ -23,37 +23,28 @@ $breadcrumbs = [
 require_once __DIR__ . '/includes/header.php';
 ?>
 <!-- Place-specific Structured Data -->
+<?php
+$_address = [
+    '@type'           => 'PostalAddress',
+    'addressLocality' => $place['location'] ?? 'Palakkad',
+    'addressRegion'   => 'Kerala',
+    'addressCountry'  => 'IN',
+];
+if (!empty($place['address'])) $_address['streetAddress'] = $place['address'];
+$_placeSchema = [
+    '@context'    => 'https://schema.org',
+    '@type'       => 'TouristAttraction',
+    'name'        => $place['name'],
+    'description' => strip_tags($place['description'] ?? ''),
+    'url'         => $seoCanonicalUrl,
+    'address'     => $_address,
+];
+if (!empty($place['image_url'])) $_placeSchema['image']        = $place['image_url'];
+if (!empty($place['timings']))   $_placeSchema['openingHours'] = $place['timings'];
+if (!empty($place['contact']))   $_placeSchema['telephone']    = $place['contact'];
+?>
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "TouristAttraction",
-    "name": "<?php echo htmlspecialchars($place['name']); ?>",
-    "description": "<?php echo htmlspecialchars($place['description']); ?>",
-    "url": <?php echo json_encode($seoCanonicalUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-    <?php if ($place['image_url']): ?>
-    "image": "<?php echo htmlspecialchars($place['image_url']); ?>",
-    <?php endif; ?>
-    "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "<?php echo htmlspecialchars($place['location']); ?>",
-        "addressRegion": "Kerala",
-        "addressCountry": "IN"
-        <?php if ($place['address']): ?>
-        ,"streetAddress": "<?php echo htmlspecialchars($place['address']); ?>"
-        <?php endif; ?>
-    },
-    "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "10.7867",
-        "longitude": "76.6548"
-    }
-    <?php if ($place['timings']): ?>
-    ,"openingHours": "<?php echo htmlspecialchars($place['timings']); ?>"
-    <?php endif; ?>
-    <?php if ($place['contact']): ?>
-    ,"telephone": "<?php echo htmlspecialchars($place['contact']); ?>"
-    <?php endif; ?>
-}
+<?php echo json_encode($_placeSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
 </script>
 
 <section class="py-5 mt-5">

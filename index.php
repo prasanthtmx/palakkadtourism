@@ -85,39 +85,7 @@ function home_resolve_place_image(array $place): string {
     </div>
 </aside>
 
-<!-- Structured data for the home page -->
-<script type="application/ld+json">
-<?php
-$homeUrl = rtrim(SITE_URL, '/') . BASE_PATH . '/';
-$homeImage = rtrim(SITE_URL, '/') . BASE_PATH . '/assets/images/banner.jpg';
-$touristDestination = [
-    '@context' => 'https://schema.org',
-    '@type' => 'TouristDestination',
-    'name' => 'Palakkad',
-    'alternateName' => ['Palghat', 'പാലക്കാട്'],
-    'url' => $homeUrl,
-    'image' => $homeImage,
-    'description' => 'Palakkad (Palghat) is a district in Kerala, India — known for the Palakkad Gap, paddy fields, dams, temples, and hill stations.',
-    'address' => [
-        '@type' => 'PostalAddress',
-        'addressLocality' => 'Palakkad',
-        'addressRegion' => 'Kerala',
-        'addressCountry' => 'IN',
-    ],
-    'geo' => [
-        '@type' => 'GeoCoordinates',
-        'latitude' => 10.7867,
-        'longitude' => 76.6548,
-    ],
-    'touristType' => ['Cultural tourist', 'Nature lover', 'Pilgrim', 'Family traveler'],
-    'sameAs' => [
-        'https://en.wikipedia.org/wiki/Palakkad_district',
-        'https://en.wikipedia.org/wiki/Palakkad',
-    ],
-];
-echo json_encode($touristDestination, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-?>
-</script>
+<!-- FAQ structured data for the home page -->
 <script type="application/ld+json">
 <?php
 $faqPage = [
