@@ -57,7 +57,7 @@ if (!defined('ALLOW_CREATE_ADMIN_SCRIPT')) {
 
 // Cache-bust main stylesheet (?v=… on the link). Bump this when assets/css/style.css changes.
 if (!defined('STYLE_CSS_V')) {
-    define('STYLE_CSS_V', '1.6.6');
+    define('STYLE_CSS_V', '1.7.3');
 }
 
 // Timezone

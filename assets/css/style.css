@@ -1412,13 +1412,16 @@ p, a, span, div, li, td, th,
 footer.site-footer {
     margin-top: auto;
     position: relative;
-    background: linear-gradient(175deg, #082a3d 0%, #001925 42%, #000a10 100%);
+    background: #0b1d2c;
     box-shadow: 0 -10px 36px rgba(0, 8, 14, 0.35);
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     overflow: hidden;
+    padding-bottom: 3.4rem;
 }
 
 .site-footer-accent {
+    position: relative;
+    z-index: 2;
     height: 4px;
     width: 100%;
     background: linear-gradient(
@@ -1445,6 +1448,7 @@ footer.site-footer .container {
     letter-spacing: -0.02em;
     margin-bottom: 0.35rem;
     color: #fff;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.75);
 }
 
 .site-footer-tagline {
@@ -1460,6 +1464,7 @@ footer.site-footer .container {
     line-height: 1.65;
     color: rgba(255, 255, 255, 0.82);
     margin-bottom: 1rem;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 .site-footer-notice {
@@ -1495,6 +1500,7 @@ footer.site-footer .container {
     color: rgba(255, 255, 255, 0.86) !important;
     text-decoration: none !important;
     font-size: 0.92rem;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75);
     transition: color 0.2s ease, padding-left 0.2s ease;
 }
 
@@ -1546,6 +1552,7 @@ footer.site-footer .container {
     font-size: 0.88rem;
     color: rgba(255, 255, 255, 0.48);
     letter-spacing: 0.03em;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 /* Responsive Images */
@@ -7394,6 +7401,162 @@ body.admin-page {
 @media (max-width: 767.98px) {
     .hsp-help-row {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Footer landscape walk */
+.ft-walk {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.ft-walk::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(8, 20, 30, 0.28) 0%, rgba(8, 20, 30, 0.12) 42%, rgba(8, 20, 30, 0.02) 100%);
+}
+
+.ft-walk-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ft-walker {
+    position: absolute;
+    left: 0;
+    bottom: 14px;
+    width: 42px;
+    height: 52px;
+    overflow: visible;
+    z-index: 2;
+    animation: ft-walk-x 18s linear infinite;
+}
+
+.ft-cloud {
+    animation: ft-cloud-fly 96s linear infinite;
+}
+
+.ft-cloud--2 {
+    animation-duration: 118s;
+    animation-delay: -40s;
+}
+
+.ft-cloud--3 {
+    animation-duration: 140s;
+    animation-delay: -75s;
+}
+
+.ft-cloud--slow {
+    animation-duration: 160s;
+    animation-delay: -22s;
+}
+
+.ft-river-shine {
+    animation: ft-river-flow 8s linear infinite;
+}
+
+.ft-spill {
+    stroke-dasharray: 5 9;
+    animation: ft-river-flow 5.5s linear infinite;
+}
+
+.ft-tree,
+.ft-palm {
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation: ft-sway 5.5s ease-in-out infinite;
+}
+
+.ft-tree--2,
+.ft-palm--2 {
+    animation-duration: 7s;
+    animation-delay: -2s;
+}
+
+.ft-flag {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: ft-flag-wave 1.8s ease-in-out infinite;
+}
+
+.ft-arm,
+.ft-leg {
+    transform-box: fill-box;
+    transform-origin: top center;
+}
+
+.ft-arm {
+    animation: ft-arm-swing 0.7s ease-in-out infinite;
+}
+
+.ft-leg--l {
+    animation: ft-stride 0.7s ease-in-out infinite;
+}
+
+.ft-leg--r {
+    animation: ft-stride 0.7s ease-in-out infinite reverse;
+}
+
+@keyframes ft-walk-x {
+    from { left: -48px; }
+    to { left: calc(100% + 8px); }
+}
+
+@keyframes ft-stride {
+    0%, 100% { transform: rotate(26deg); }
+    50% { transform: rotate(-28deg); }
+}
+
+@keyframes ft-arm-swing {
+    0%, 100% { transform: rotate(-18deg); }
+    50% { transform: rotate(22deg); }
+}
+
+@keyframes ft-river-flow {
+    to { stroke-dashoffset: -92; }
+}
+
+@keyframes ft-cloud-fly {
+    from { transform: translateX(0); }
+    to { transform: translateX(1180px); }
+}
+
+@keyframes ft-sway {
+    0%, 100% { transform: rotate(-1.4deg); }
+    50% { transform: rotate(1.8deg); }
+}
+
+@keyframes ft-flag-wave {
+    0%, 100% { transform: skewY(0deg) scaleX(1); }
+    50% { transform: skewY(-8deg) scaleX(1.08); }
+}
+
+@media (max-width: 575.98px) {
+    footer.site-footer {
+        padding-bottom: 2.6rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ft-walker,
+    .ft-arm,
+    .ft-leg--l,
+    .ft-leg--r,
+    .ft-river-shine,
+    .ft-spill,
+    .ft-cloud,
+    .ft-tree,
+    .ft-palm,
+    .ft-flag {
+        animation: none;
+    }
+    .ft-walker {
+        left: 46%;
     }
 }
 
