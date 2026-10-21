@@ -39,14 +39,20 @@ if ($message === '' || chatbotTextLen($message) < 2 || chatbotTextLen($message) 
     exit;
 }
 
-if (!chatbotRateAllow(GEMINI_RATE_PER_HOUR)) {
-    http_response_code(429);
-    echo json_encode(['ok' => false, 'reply' => 'Please wait a moment before asking another question.']);
+if (chatbotLooksOffTopic($message)) {
+    echo json_encode(['ok' => true, 'reply' => chatbotOffTopicReply(), 'cached' => false]);
     exit;
 }
 
-if (chatbotLooksOffTopic($message)) {
-    echo json_encode(['ok' => true, 'reply' => chatbotOffTopicReply()]);
+$cached = chatbotCacheFind($message);
+if (is_string($cached) && $cached !== '') {
+    echo json_encode(['ok' => true, 'reply' => $cached, 'cached' => true], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+if (!chatbotRateAllow(GEMINI_RATE_PER_HOUR)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'reply' => 'Please wait a moment before asking another question.']);
     exit;
 }
 
@@ -64,6 +70,8 @@ $history = chatbotSanitizeHistory($input['history'] ?? []);
 list($ok, $reply) = chatbotCallGemini($key, GEMINI_MODEL, $system, $history, $message);
 if (!$ok) {
     http_response_code(502);
+} elseif ($reply !== '') {
+    chatbotCacheStore($message, $reply);
 }
 
-echo json_encode(['ok' => $ok, 'reply' => $reply], JSON_UNESCAPED_UNICODE);
+echo json_encode(['ok' => $ok, 'reply' => $reply, 'cached' => false], JSON_UNESCAPED_UNICODE);

@@ -206,10 +206,177 @@ function chatbotSanitizeHistory($history) {
     return $clean;
 }
 
+function chatbotCacheStopwords() {
+    return [
+        'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'how', 'what',
+        'where', 'when', 'which', 'this', 'that', 'with', 'from', 'about', 'please',
+        'tell', 'give', 'best', 'near', 'visit', 'there', 'have', 'some', 'any',
+        'does', 'did', 'could', 'would', 'should', 'will', 'just', 'also', 'into',
+        'your', 'our', 'their', 'them', 'they', 'who', 'why', 'was', 'were',
+        'is', 'its', 'let', 'know', 'need', 'want', 'help', 'info', 'information',
+        'me', 'my', 'we', 'do', 'to', 'in', 'on', 'of', 'at', 'or', 'an', 'a',
+    ];
+}
+
+function chatbotCacheTokens($message) {
+    $lower = function_exists('mb_strtolower') ? mb_strtolower($message, 'UTF-8') : strtolower($message);
+    $parts = preg_split('/\s+/u', (string) preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', $lower)) ?: [];
+    $stop = chatbotCacheStopwords();
+    $tokens = [];
+    foreach ($parts as $part) {
+        if (strlen($part) < 3 || in_array($part, $stop, true)) {
+            continue;
+        }
+        $tokens[$part] = $part;
+    }
+    return array_values($tokens);
+}
+
+function chatbotCacheKey(array $tokens) {
+    $sorted = $tokens;
+    sort($sorted, SORT_STRING);
+    return sha1(implode('|', $sorted));
+}
+
+function chatbotCacheDir() {
+    $dir = dirname(__DIR__) . '/logs/chat_cache';
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0777, true);
+        @chmod($dir, 0777);
+    }
+    return $dir;
+}
+
+function chatbotCacheReadIndex() {
+    $file = chatbotCacheDir() . '/index.json';
+    if (!is_readable($file)) {
+        return [];
+    }
+    $decoded = json_decode((string) file_get_contents($file), true);
+    return is_array($decoded) ? $decoded : [];
+}
+
+function chatbotCacheWriteIndex(array $index) {
+    $file = chatbotCacheDir() . '/index.json';
+    @file_put_contents($file, json_encode(array_values($index)), LOCK_EX);
+    @chmod($file, 0666);
+}
+
+function chatbotCacheFresh($row, $now) {
+    $ts = (int) ($row['ts'] ?? 0);
+    return $ts > 0 && ($now - $ts) < GEMINI_CACHE_TTL;
+}
+
+function chatbotCacheReply($key) {
+    $file = chatbotCacheDir() . '/' . preg_replace('/[^a-f0-9]/', '', $key) . '.json';
+    if (!is_readable($file)) {
+        return null;
+    }
+    $data = json_decode((string) file_get_contents($file), true);
+    $reply = trim((string) ($data['reply'] ?? ''));
+    return $reply !== '' ? $reply : null;
+}
+
+function chatbotCacheSimilarEnough(array $a, array $b) {
+    if (count($a) < 2 || count($b) < 2) {
+        return 0.0;
+    }
+    $mapA = array_fill_keys($a, true);
+    $mapB = array_fill_keys($b, true);
+    $intersect = array_intersect_key($mapA, $mapB);
+    $overlap = count($intersect);
+    if ($overlap < 2) {
+        return 0.0;
+    }
+    $union = count($mapA) + count($mapB) - $overlap;
+    $jaccard = $union > 0 ? ($overlap / $union) : 0.0;
+    $smaller = count($a) <= count($b) ? $a : $b;
+    $larger = count($a) <= count($b) ? $b : $a;
+    $missing = count(array_diff($smaller, $larger));
+    $ratio = count($larger) / max(1, count($smaller));
+    if ($jaccard >= 0.75 || ($missing <= 1 && $ratio <= 2.0)) {
+        return $jaccard > 0 ? $jaccard : 0.76;
+    }
+    return 0.0;
+}
+
+function chatbotCacheFind($message) {
+    $tokens = chatbotCacheTokens($message);
+    if (count($tokens) < 2) {
+        return null;
+    }
+    $now = time();
+    $exactKey = chatbotCacheKey($tokens);
+    $index = chatbotCacheReadIndex();
+    foreach ($index as $row) {
+        if (!chatbotCacheFresh($row, $now)) {
+            continue;
+        }
+        if (($row['key'] ?? '') === $exactKey) {
+            $reply = chatbotCacheReply($exactKey);
+            if ($reply !== null) {
+                return $reply;
+            }
+        }
+    }
+    $bestScore = 0.0;
+    $bestKey = '';
+    foreach ($index as $row) {
+        if (!chatbotCacheFresh($row, $now)) {
+            continue;
+        }
+        $rowTokens = isset($row['tokens']) && is_array($row['tokens']) ? $row['tokens'] : [];
+        $score = chatbotCacheSimilarEnough($tokens, $rowTokens);
+        if ($score > $bestScore) {
+            $bestScore = $score;
+            $bestKey = (string) ($row['key'] ?? '');
+        }
+    }
+    if ($bestKey === '') {
+        return null;
+    }
+    return chatbotCacheReply($bestKey);
+}
+
+function chatbotCacheStore($message, $reply) {
+    $reply = trim((string) $reply);
+    $tokens = chatbotCacheTokens($message);
+    if ($reply === '' || count($tokens) < 2) {
+        return;
+    }
+    $key = chatbotCacheKey($tokens);
+    $now = time();
+    $payload = [
+        'q' => $message,
+        'reply' => $reply,
+        'ts' => $now,
+    ];
+    $file = chatbotCacheDir() . '/' . $key . '.json';
+    @file_put_contents($file, json_encode($payload, JSON_UNESCAPED_UNICODE), LOCK_EX);
+    @chmod($file, 0666);
+
+    $index = chatbotCacheReadIndex();
+    $kept = [];
+    $seen = [$key => true];
+    $kept[] = ['key' => $key, 'tokens' => $tokens, 'ts' => $now];
+    foreach ($index as $row) {
+        $rowKey = (string) ($row['key'] ?? '');
+        if ($rowKey === '' || isset($seen[$rowKey]) || !chatbotCacheFresh($row, $now)) {
+            continue;
+        }
+        $seen[$rowKey] = true;
+        $kept[] = $row;
+    }
+    if (count($kept) > GEMINI_CACHE_MAX) {
+        $kept = array_slice($kept, 0, GEMINI_CACHE_MAX);
+    }
+    chatbotCacheWriteIndex($kept);
+}
+
 function chatbotCallGemini($apiKey, $model, $system, $history, $message) {
     $model = preg_replace('#^models/#', '', trim($model));
     if ($model === '') {
-        $model = 'gemini-2.0-flash';
+        $model = 'gemini-3.8-flash';
     }
     $url = 'https://generativelanguage.googleapis.com/v1beta/models/'
         . rawurlencode($model)

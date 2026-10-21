@@ -5,7 +5,8 @@
  * 3. Never commit gemini.local.php (it is gitignored).
  *
  * Key: https://aistudio.google.com/apikey
- * Models: gemini-2.0-flash  (fast, default)  or  gemini-2.5-flash
+ * Models: gemini-3.8-flash (current default)
  */
 define('GEMINI_API_KEY', 'paste_gemini_api_key_here');
-define('GEMINI_MODEL', 'gemini-2.0-flash');
+define('GEMINI_MODEL', 'gemini-3.8-flash');
+// Optional: define('GEMINI_CACHE_TTL', 14 * 86400);

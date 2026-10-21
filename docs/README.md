@@ -104,7 +104,7 @@ palakkadtourism/
 └── sitemap.php
 ```
 
-See also: [Troubleshooting](TROUBLESHOOTING.md), [Security](SECURITY_IMPROVEMENTS.md), [Temples import](TEMPLES_IMPORT.md), [Institutions setup](INSTITUTIONS_SETUP.md).
+See also: [Troubleshooting](TROUBLESHOOTING.md), [Security](SECURITY_IMPROVEMENTS.md), [Temples import](TEMPLES_IMPORT.md), [Institutions setup](INSTITUTIONS_SETUP.md), [Gemini chatbot](GEMINI_CHATBOT.md), [Messenger chat](MESSENGER_CHAT_SETUP.md).
 
 ## Admin Panel Usage
 
