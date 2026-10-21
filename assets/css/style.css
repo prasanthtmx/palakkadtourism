@@ -7097,6 +7097,306 @@ body.admin-page {
     }
 }
 
+/* ── Hospitals hub (.hsp-*) ── */
+.hsp-page {
+    background: #f3f7f6;
+}
+
+.breadcrumb-nav:has(+ .hsp-page) {
+    background: #023049;
+    border-bottom: 0;
+}
+
+.breadcrumb-nav:has(+ .hsp-page) .breadcrumb-item,
+.breadcrumb-nav:has(+ .hsp-page) .breadcrumb-item a,
+.breadcrumb-nav:has(+ .hsp-page) .breadcrumb-item.active {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.breadcrumb-nav:has(+ .hsp-page) .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.breadcrumb-nav:has(+ .hsp-page) .breadcrumb-item a:hover,
+.breadcrumb-nav:has(+ .hsp-page) .breadcrumb-item a:focus-visible {
+    color: #e8c56a;
+}
+
+.hsp-page-header {
+    position: relative;
+    padding: 2.75rem 0 2.4rem;
+    overflow: hidden;
+    background: linear-gradient(135deg, #023049 0%, #0a4d3f 42%, #157a5c 100%);
+}
+
+.hsp-header-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(ellipse at 12% 85%, rgba(184, 150, 46, 0.14) 0%, transparent 50%),
+        radial-gradient(ellipse at 92% 10%, rgba(255, 255, 255, 0.08) 0%, transparent 48%);
+}
+
+.hsp-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #e8c56a;
+}
+
+.hsp-kicker::before {
+    content: "";
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: #b8962e;
+}
+
+.hsp-title {
+    margin: 0 0 0.55rem;
+    color: #fff;
+    font-size: clamp(1.85rem, 4.4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+}
+
+.hsp-lead {
+    margin: 0;
+    max-width: 38rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1.02rem;
+    line-height: 1.7;
+}
+
+.hsp-stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.35rem 1.75rem;
+    margin-top: 1.35rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.hsp-stat {
+    display: flex;
+    flex-direction: column;
+    min-width: 5.5rem;
+    line-height: 1.2;
+}
+
+.hsp-stat-num {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.hsp-stat-label {
+    color: rgba(232, 197, 106, 0.85);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.hsp-body {
+    padding: 2.25rem 0 3.25rem;
+}
+
+.hsp-notice {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    margin-bottom: 1.75rem;
+    padding: 1rem 1.15rem;
+    background: #fff;
+    border: 1px solid rgba(21, 122, 92, 0.14);
+    border-left: 4px solid #157a5c;
+    border-radius: 12px;
+    box-shadow: 0 6px 22px rgba(0, 25, 37, 0.05);
+}
+
+.hsp-notice-icon {
+    color: #157a5c;
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-top: 0.1rem;
+}
+
+.hsp-notice-title {
+    margin: 0 0 0.2rem;
+    font-weight: 700;
+    color: #001925;
+}
+
+.hsp-notice-text {
+    margin: 0;
+    color: #5a6b75;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.hsp-section-intro {
+    margin-bottom: 1.15rem;
+}
+
+.hsp-section-heading {
+    margin: 0 0 0.2rem;
+    font-size: 1.35rem;
+    font-weight: 750;
+    color: #001925;
+}
+
+.hsp-section-sub {
+    margin: 0;
+    color: #5a6b75;
+    font-size: 0.95rem;
+}
+
+.hsp-card {
+    display: flex;
+    gap: 1rem;
+    height: 100%;
+    padding: 1.25rem 1.3rem 1.2rem;
+    background: #fff;
+    border: 1px solid rgba(0, 25, 37, 0.07);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 25, 37, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.hsp-card:hover,
+.hsp-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(0, 25, 37, 0.1);
+    outline: 2px solid #157a5c;
+    outline-offset: 2px;
+}
+
+.hsp-card-icon {
+    flex: 0 0 3.1rem;
+    width: 3.1rem;
+    height: 3.1rem;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 1.35rem;
+}
+
+.hsp-card--gov .hsp-card-icon { background: #e8f1fb; color: #1565c0; }
+.hsp-card--pvt .hsp-card-icon { background: #e8f6ef; color: #157a5c; }
+.hsp-card--ayu .hsp-card-icon { background: #fff4e0; color: #b8860b; }
+.hsp-card--hom .hsp-card-icon { background: #f3e8f6; color: #7b1fa2; }
+
+.hsp-card-copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.hsp-card-meta {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #157a5c;
+    margin-bottom: 0.2rem;
+}
+
+.hsp-card-title {
+    font-size: 1.2rem;
+    font-weight: 750;
+    color: #001925;
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+}
+
+.hsp-card-text {
+    color: #5a6b75;
+    font-size: 0.94rem;
+    line-height: 1.5;
+    margin-bottom: 0.7rem;
+}
+
+.hsp-card-cta {
+    margin-top: auto;
+    font-size: 0.88rem;
+    font-weight: 650;
+    color: #0d5c47;
+}
+
+.hsp-card-cta i {
+    margin-left: 0.2rem;
+}
+
+.hsp-help-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.75rem;
+}
+
+.hsp-help-card {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 1.05rem 1.15rem;
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 25, 37, 0.07);
+}
+
+.hsp-help-card > i {
+    font-size: 1.25rem;
+    color: #157a5c;
+    margin-top: 0.15rem;
+}
+
+.hsp-help-card--link {
+    text-decoration: none;
+    color: inherit;
+    border-color: rgba(184, 150, 46, 0.35);
+    background: linear-gradient(180deg, #fffdf6 0%, #fff 100%);
+}
+
+.hsp-help-card--link:hover,
+.hsp-help-card--link:focus-visible {
+    outline: 2px solid #b8962e;
+    outline-offset: 2px;
+}
+
+.hsp-help-title {
+    margin: 0 0 0.2rem;
+    font-weight: 700;
+    color: #001925;
+}
+
+.hsp-help-text {
+    margin: 0;
+    color: #5a6b75;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.hsp-help-more {
+    color: #0d5c47;
+    font-weight: 650;
+}
+
+@media (max-width: 767.98px) {
+    .hsp-help-row {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 480px) {
     .vg-grid {
         grid-template-columns: 1fr;

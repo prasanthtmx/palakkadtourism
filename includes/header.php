@@ -293,6 +293,7 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
     ]
     </script>
     
+    <?php if (!empty($pageHeadExtra)) echo $pageHeadExtra; ?>
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8043296707059876"
          crossorigin="anonymous"></script>
