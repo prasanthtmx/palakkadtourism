@@ -90,6 +90,9 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/style.css?v=<?php echo rawurlencode(STYLE_CSS_V); ?>">
+    <?php if (!empty($showGeminiChat)): ?>
+    <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/chatbot.css?v=1">
+    <?php endif; ?>
     
     <!-- Google Analytics 4 - Enhanced Tracking -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RLBH00600Y"></script>

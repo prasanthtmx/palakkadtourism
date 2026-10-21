@@ -1,4 +1,5 @@
 <?php
+$showGeminiChat = true;
 $pageTitle = "Palakkad Tourism | Kerala travel guide";
 $pageDescription = "Travel guide to Palakkad (Palghat), Kerala — temples, dams, hill stations, festivals, and the Rice Bowl of Kerala.";
 $pageKeywords = "Palakkad, Palghat, Kerala tourism, Palakkad attractions, Palakkad temples, Palakkad festivals, Kerala travel guide, Palakkad tourist places";

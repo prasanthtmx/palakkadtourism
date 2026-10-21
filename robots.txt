@@ -6,6 +6,7 @@ Disallow: /database/
 Disallow: /docs/
 Disallow: /includes/
 Disallow: /logs/
+Disallow: /chatbot-api.php
 
 # Sitemap
 Sitemap: https://palakkadtourism.org/sitemap.php

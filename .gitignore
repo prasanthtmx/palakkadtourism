@@ -1,5 +1,6 @@
 # Credentials — never commit real passwords
 config/database.local.php
+config/gemini.local.php
 database.local.php
 .env
 .env.*
@@ -16,6 +17,7 @@ database/create_admin_user.sql
 # Runtime / logs
 logs/*.log
 logs/*.tmp
+logs/*.json
 *.log
 
 # Uploads and generated files

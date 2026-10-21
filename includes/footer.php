@@ -71,13 +71,19 @@
     <!-- Custom JS -->
     <script src="<?php echo BASE_PATH; ?>/assets/js/main.js"></script>
     
-    <!-- Meta Messenger Chat Plugin (optional file — avoids fatal if missing on server) -->
     <?php
-    $messengerFile = __DIR__ . '/messenger_chat.php';
-    if (is_readable($messengerFile)) {
-        require_once $messengerFile;
-        if (function_exists('initMessengerChat')) {
-            initMessengerChat('palakkadtourism');
+    if (!empty($showGeminiChat)) {
+        $chatWidget = __DIR__ . '/chatbot_widget.php';
+        if (is_readable($chatWidget)) {
+            require $chatWidget;
+        }
+    } else {
+        $messengerFile = __DIR__ . '/messenger_chat.php';
+        if (is_readable($messengerFile)) {
+            require_once $messengerFile;
+            if (function_exists('initMessengerChat')) {
+                initMessengerChat('palakkadtourism');
+            }
         }
     }
     ?>
