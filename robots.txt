@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /config/
+Disallow: /database/
+Disallow: /docs/
+Disallow: /includes/
+Disallow: /logs/
+
+# Sitemap
+Sitemap: https://palakkadtourism.org/sitemap.php
+

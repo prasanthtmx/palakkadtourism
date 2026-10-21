@@ -1,0 +1,33 @@
+# Credentials — never commit real passwords
+config/database.local.php
+database.local.php
+.env
+.env.*
+!.env.example
+
+# Full database data (keep table/schema SQL only)
+database/dumps/*.sql
+database/*_sample_data.sql
+database/sample_data.sql
+database/temples_bulk_insert.sql
+database/mosques_update.sql
+database/create_admin_user.sql
+
+# Runtime / logs
+logs/*.log
+logs/*.tmp
+*.log
+
+# Uploads and generated files
+uploads/
+tmp/
+cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.idea/
+.vscode/
+*.code-workspace
