@@ -1,0 +1,64 @@
+# Palakkad Tourism
+
+> Palakkad Tourism is a comprehensive travel and information guide for Palakkad (Palghat), Kerala, India — covering tourist places, temples, churches, mosques, festivals, dams, rivers, heritage villages, and local directory listings.
+
+Palakkad is known as the "Rice Bowl of Kerala" and is the third-largest district in Kerala, famous for the Palakkad Gap (Palakkad Pass) through the Western Ghats. The district has a unique blend of Malayali and Tamil cultures.
+
+## Key Pages
+
+- [Home](https://palakkadtourism.org/): Overview of Palakkad tourism with featured places and upcoming events.
+- [Places to Visit](https://palakkadtourism.org/places.php): Complete list of tourist destinations in Palakkad.
+- [History](https://palakkadtourism.org/history.php): Rich history from ancient dynasties (Pallava, Zamorin) through British rule to modern Kerala.
+- [Palakkad Fort](https://palakkadtourism.org/fort.php): Tipu Sultan's fort, one of the best-preserved forts in Kerala.
+- [Art & Culture](https://palakkadtourism.org/art-culture.php): Traditional arts, crafts, and cultural heritage of Palakkad.
+- [Customs](https://palakkadtourism.org/customs.php): Local customs, traditions, and way of life.
+
+## Religious Places
+
+- [Temples](https://palakkadtourism.org/temples.php): Hindu temples in Palakkad — Kalpathy Ratholsavam temple, Nemmara Vela, and more.
+- [Churches](https://palakkadtourism.org/churches.php): Christian churches across Palakkad district.
+- [Mosques](https://palakkadtourism.org/mosques.php): Mosques and Islamic heritage in Palakkad.
+- [Jain Temple](https://palakkadtourism.org/jain-temple.php): Jain temples in Palakkad.
+- [Religious Places Overview](https://palakkadtourism.org/religious-places.php): Multi-faith religious sites.
+
+## Dams & Water Bodies
+
+- [Malampuzha Dam](https://palakkadtourism.org/dam-malampuzha.php): Largest dam in Kerala; inaugurated 1955 by Jawaharlal Nehru.
+- [Parambikulam Dam](https://palakkadtourism.org/dam-parambikulam.php): Part of Parambikulam Wildlife Sanctuary.
+- [Mangalam Dam](https://palakkadtourism.org/dam-mangalam.php)
+- [Meenkara Dam](https://palakkadtourism.org/dam-meenkara.php)
+- [Chulliyar Dam](https://palakkadtourism.org/dam-chulliyar.php)
+- [Walayar Dam](https://palakkadtourism.org/dam-walayar.php)
+- [Pothundy Dam](https://palakkadtourism.org/dam-pothundy.php)
+- [Siruvani Dam](https://palakkadtourism.org/dam-siruvani.php): Supplies drinking water to Coimbatore.
+- [Rivers](https://palakkadtourism.org/rivers.php): Bharathapuzha and other rivers of Palakkad.
+- [Mountain Ranges & Passes](https://palakkadtourism.org/mountain-ranges-passes.php): Palakkad Gap and Western Ghats ranges.
+
+## Festivals
+
+- [Festivals](https://palakkadtourism.org/festivals.php): Onam, Kalpathy Ratholsavam, Nemmara Vela, Vishu, Christmas, Eid, and more.
+
+## Institutions & Services
+
+- [Institutions](https://palakkadtourism.org/institutions.php): Educational, government, and cultural institutions in Palakkad.
+- [Hospitals](https://palakkadtourism.org/hospitals.php): Government, private, Ayurveda, and Homeopathy hospitals.
+- [Heritage Villages](https://palakkadtourism.org/heritage-villages.php): Kalpathy, Thenkurissi, and other heritage villages.
+- [How to Reach](https://palakkadtourism.org/how-to-reach.php): Train, bus, and road access to Palakkad.
+
+## Municipalities
+
+- [Palakkad Municipality](https://palakkadtourism.org/municipality-palakkad.php)
+- [Ottappalam Municipality](https://palakkadtourism.org/municipality-ottappalam.php)
+- [Shoranur Municipality](https://palakkadtourism.org/municipality-shoranur.php)
+- [Chittur Municipality](https://palakkadtourism.org/municipality-chittur.php)
+- [Pattambi Municipality](https://palakkadtourism.org/municipality-pattambi.php)
+- [Mannarkkad Municipality](https://palakkadtourism.org/municipality-mannarkkad.php)
+- [Cherpulassery Municipality](https://palakkadtourism.org/municipality-cherpulassery.php)
+
+## Business Directory
+
+- [Yellow Pages](https://palakkadtourism.org/yellow-pages.php): Local business directory for Palakkad.
+
+## About
+
+- [About Palakkad Tourism](https://palakkadtourism.org/about.php)

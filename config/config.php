@@ -48,6 +48,11 @@ if (!isset($manualBasePath)) {
     $basePath = $manualBasePath;
 }
 
+// Admin scripts live under /admin — public asset URLs use the site root.
+if (preg_match('#/admin$#', $basePath)) {
+    $basePath = preg_replace('#/admin$#', '', $basePath);
+}
+
 define('BASE_PATH', $basePath);
 
 // Set true only for first-time admin bootstrap via admin/create_admin.php, then set false again.
@@ -57,7 +62,11 @@ if (!defined('ALLOW_CREATE_ADMIN_SCRIPT')) {
 
 // Cache-bust main stylesheet (?v=… on the link). Bump this when assets/css/style.css changes.
 if (!defined('STYLE_CSS_V')) {
-    define('STYLE_CSS_V', '1.7.3');
+    define('STYLE_CSS_V', '1.7.5');
+}
+
+if (!defined('ADMIN_CSS_V')) {
+    define('ADMIN_CSS_V', '1.0.1');
 }
 
 // Timezone

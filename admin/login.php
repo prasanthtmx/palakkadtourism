@@ -11,6 +11,8 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 }
 
 $error = '';
+$username = '';
+$publicBase = preg_replace('#/admin$#', '', (string) BASE_PATH);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = sanitizeInput($_POST['username'] ?? '');
@@ -71,78 +73,131 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Palakkad Tourism</title>
     <meta name="robots" content="noindex, nofollow">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($publicBase); ?>/assets/images/palakkad-logo.png">
     <style>
+        :root {
+            --ink: #14202b;
+            --muted: #5c6b76;
+            --line: #d5ddd8;
+            --bg: #f3f1ea;
+            --card: #ffffff;
+            --accent: #0a4d3f;
+        }
+        * { box-sizing: border-box; }
+        html, body { min-height: 100%; }
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1.5rem;
+        }
+        .login {
+            width: 100%;
+            max-width: 22rem;
+        }
+        .login-brand {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+        .login-brand img {
+            display: block;
+            height: 52px;
+            width: auto;
+            margin: 0 auto 0.85rem;
+        }
+        h1 {
+            margin: 0 0 0.2rem;
+            font-size: 1.25rem;
+            font-weight: 650;
+            letter-spacing: -0.02em;
+        }
+        .login-brand p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
         }
         .login-card {
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 1.4rem 1.3rem 1.3rem;
         }
+        label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            margin: 0 0 0.35rem;
+        }
+        input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0.65rem 0.75rem;
+            font: inherit;
+            color: var(--ink);
+            background: #fff;
+            margin-bottom: 0.95rem;
+        }
+        input:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
+            border-color: var(--accent);
+        }
+        button {
+            width: 100%;
+            border: 0;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+        }
+        button:hover { background: #083d32; }
+        .login-error {
+            background: #fdecea;
+            color: #8a1f1f;
+            border-radius: 8px;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.95rem;
+        }
+        .login-back {
+            display: block;
+            text-align: center;
+            margin-top: 1.05rem;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .login-back:hover { color: var(--ink); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card login-card">
-                    <div class="card-body p-5">
-                        <div class="text-center mb-4">
-                            <img src="<?php echo BASE_PATH; ?>/assets/images/palakkad-logo.png" alt="Palakkad Tourism" class="mb-3" style="max-height: 80px; width: auto;">
-                            <h2>Admin Login</h2>
-                            <p class="text-muted">Palakkad Tourism Admin Panel</p>
-                        </div>
-                        
-                        <?php if ($error): ?>
-                        <div class="alert alert-danger">
-                            <i class="bi bi-exclamation-triangle"></i> <?php echo htmlspecialchars($error); ?>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <form method="POST" action="">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                    <input type="text" class="form-control" id="username" name="username" required autofocus>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                    <input type="password" class="form-control" id="password" name="password" required>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="bi bi-box-arrow-in-right"></i> Login
-                            </button>
-                        </form>
-                        
-                        <div class="text-center mt-4">
-                            <a href="<?php echo BASE_PATH; ?>/" class="text-decoration-none">
-                                <i class="bi bi-arrow-left"></i> Back to Website
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-3 text-white">
-                    <small>Default credentials: admin / admin123 (Please change after first login!)</small>
-                </div>
-            </div>
+    <main class="login">
+        <div class="login-brand">
+            <img src="<?php echo htmlspecialchars($publicBase); ?>/assets/images/palakkad-logo.png" alt="Palakkad Tourism">
+            <h1>Admin login</h1>
+            <p>Palakkad Tourism</p>
         </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="login-card">
+            <?php if ($error): ?>
+            <div class="login-error" role="alert"><?php echo htmlspecialchars($error); ?></div>
+            <?php endif; ?>
+            <form method="POST" action="">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" autocomplete="username" required autofocus>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" autocomplete="current-password" required>
+                <button type="submit">Sign in</button>
+            </form>
+        </div>
+        <a class="login-back" href="<?php echo htmlspecialchars($publicBase); ?>/">Back to website</a>
+    </main>
 </body>
 </html>
-

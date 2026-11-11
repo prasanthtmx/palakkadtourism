@@ -273,6 +273,9 @@
             <div class="row pb-3">
                 <div class="col-12 text-center">
                     <p class="site-footer-copyright mb-0">&copy; 2004&ndash;<?php echo date('Y'); ?> Palakkad Tourism. All rights reserved.</p>
+                    <p class="mt-1 mb-0" style="font-size:0.8rem;">
+                        <a href="<?php echo BASE_PATH; ?>/cookies-policy.php" class="site-footer-link site-footer-link-inline">Cookies Policy</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -300,6 +303,39 @@
         }
     }
     ?>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+        <div class="cookie-banner-inner">
+            <p class="cookie-banner-text">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                We use cookies to improve your experience, analyse traffic, and serve relevant ads. By clicking <strong>Accept</strong>, you consent to our use of cookies.
+                <a href="<?php echo BASE_PATH; ?>/cookies-policy.php">Learn more</a>
+            </p>
+            <div class="cookie-banner-actions">
+                <button class="cookie-btn-accept" id="cookieAccept">Accept</button>
+                <button class="cookie-btn-decline" id="cookieDecline">Decline</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function () {
+        var banner = document.getElementById('cookieBanner');
+        var consent = null;
+        try { consent = localStorage.getItem('cookie_consent'); } catch (e) {}
+        if (!consent) {
+            setTimeout(function () { banner.classList.add('cookie-banner--visible'); }, 800);
+        }
+        document.getElementById('cookieAccept').addEventListener('click', function () {
+            try { localStorage.setItem('cookie_consent', 'accepted'); } catch (e) {}
+            banner.classList.remove('cookie-banner--visible');
+        });
+        document.getElementById('cookieDecline').addEventListener('click', function () {
+            try { localStorage.setItem('cookie_consent', 'declined'); } catch (e) {}
+            banner.classList.remove('cookie-banner--visible');
+        });
+    })();
+    </script>
 </body>
 </html>
 

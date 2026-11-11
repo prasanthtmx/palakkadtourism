@@ -2,188 +2,142 @@
 session_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/security.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: login.php');
-    exit;
-}
+requireAdminAuth();
 
 $conn = getDBConnection();
 
-// Get statistics
-$templeCount = $conn->query("SELECT COUNT(*) as count FROM temples")->fetch_assoc()['count'];
-$churchCount = $conn->query("SELECT COUNT(*) as count FROM churches")->fetch_assoc()['count'];
-$mosqueCount = $conn->query("SELECT COUNT(*) as count FROM mosques")->fetch_assoc()['count'];
-$festivalCount = $conn->query("SELECT COUNT(*) as count FROM festivals")->fetch_assoc()['count'];
-$placeCount = $conn->query("SELECT COUNT(*) as count FROM places")->fetch_assoc()['count'];
+$adminCount = static function ($conn, $table) {
+    $table = preg_replace('/[^a-z0-9_]/i', '', (string) $table);
+    if ($table === '') {
+        return 0;
+    }
+    $res = $conn->query('SELECT COUNT(*) AS c FROM `' . $table . '`');
+    if (!$res) {
+        return 0;
+    }
+    $row = $res->fetch_assoc();
+    return (int) ($row['c'] ?? 0);
+};
+
+$counts = [
+    'temples' => $adminCount($conn, 'temples'),
+    'churches' => $adminCount($conn, 'churches'),
+    'mosques' => $adminCount($conn, 'mosques'),
+    'festivals' => $adminCount($conn, 'festivals'),
+    'places' => $adminCount($conn, 'places'),
+    'hospitals' => $adminCount($conn, 'hospitals'),
+    'heritage' => $adminCount($conn, 'heritage_villages'),
+    'institutions' => $adminCount($conn, 'institutions'),
+    'directory' => $adminCount($conn, 'directory_entries'),
+];
 
 closeDBConnection($conn);
+
+$adminName = trim((string) ($_SESSION['admin_name'] ?? $_SESSION['admin_username'] ?? 'Admin'));
+$adminPageTitle = 'Dashboard';
+require __DIR__ . '/includes/head.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Palakkad Tourism</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/style.css">
-</head>
 <body class="admin-page">
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 admin-sidebar px-0">
-                <div class="position-sticky pt-3">
-                    <h4 class="text-white text-center mb-4">Admin Panel</h4>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="<?php echo BASE_PATH; ?>/admin/">
-                                <i class="bi bi-speedometer2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BASE_PATH; ?>/admin/temples.php">
-                                <i class="bi bi-building"></i> Temples
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BASE_PATH; ?>/admin/churches.php">
-                                <i class="bi bi-church"></i> Churches
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BASE_PATH; ?>/admin/mosques.php">
-                                <i class="bi bi-building"></i> Mosques
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BASE_PATH; ?>/admin/festivals.php">
-                                <i class="bi bi-calendar-event"></i> Festivals
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BASE_PATH; ?>/admin/places.php">
-                                <i class="bi bi-geo-alt"></i> Places
-                            </a>
-                        </li>
-                        <li class="nav-item mt-3">
-                            <a class="nav-link" href="<?php echo BASE_PATH; ?>/admin/logout.php">
-                                <i class="bi bi-box-arrow-right"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-2 border-bottom">
-                    <div class="d-flex align-items-center">
-                        <img src="<?php echo BASE_PATH; ?>/assets/images/palakkad-logo.png" alt="Palakkad Tourism" class="me-2" style="max-height: 40px; width: auto;">
-                        <h1 class="h4 mb-0">Dashboard</h1>
-                    </div>
-                    <div class="btn-toolbar mb-0">
-                        <a href="<?php echo BASE_PATH; ?>/" class="btn btn-sm btn-outline-secondary" target="_blank">
-                            <i class="bi bi-eye"></i> View Website
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div class="row mb-4">
-                    <div class="col-md-4 mb-3">
-                        <div class="card text-white bg-primary">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="card-title">Temples</h5>
-                                        <h2 class="mb-0"><?php echo $templeCount; ?></h2>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="bi bi-building fs-1"></i>
-                                    </div>
-                                </div>
-                                <a href="<?php echo BASE_PATH; ?>/admin/temples.php" class="text-white text-decoration-none">Manage <i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card text-white bg-success">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="card-title">Churches</h5>
-                                        <h2 class="mb-0"><?php echo $churchCount; ?></h2>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="bi bi-church fs-1"></i>
-                                    </div>
-                                </div>
-                                <a href="<?php echo BASE_PATH; ?>/admin/churches.php" class="text-white text-decoration-none">Manage <i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card text-white bg-info">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="card-title">Mosques</h5>
-                                        <h2 class="mb-0"><?php echo $mosqueCount; ?></h2>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="bi bi-building fs-1"></i>
-                                    </div>
-                                </div>
-                                <a href="<?php echo BASE_PATH; ?>/admin/mosques.php" class="text-white text-decoration-none">Manage <i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="card text-white bg-warning">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="card-title">Festivals</h5>
-                                        <h2 class="mb-0"><?php echo $festivalCount; ?></h2>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="bi bi-calendar-event fs-1"></i>
-                                    </div>
-                                </div>
-                                <a href="<?php echo BASE_PATH; ?>/admin/festivals.php" class="text-white text-decoration-none">Manage <i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="card text-white bg-secondary">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h5 class="card-title">Places</h5>
-                                        <h2 class="mb-0"><?php echo $placeCount; ?></h2>
-                                    </div>
-                                    <div class="align-self-center">
-                                        <i class="bi bi-geo-alt fs-1"></i>
-                                    </div>
-                                </div>
-                                <a href="<?php echo BASE_PATH; ?>/admin/places.php" class="text-white text-decoration-none">Manage <i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Welcome to the Admin Panel. Use the sidebar to manage temples, churches, mosques, festivals, and places.
-                </div>
-            </main>
+    <?php include __DIR__ . '/includes/sidebar.php'; ?>
+    <main class="admin-main">
+        <div class="admin-hero">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back, <?php echo htmlspecialchars($adminName); ?>.</p>
+            </div>
+            <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right"></i> View website
+            </a>
         </div>
-    </div>
 
+        <div class="adm-stats">
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/temples.php">
+                <div>
+                    <span>Temples</span>
+                    <strong><?php echo $counts['temples']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon"><i class="bi bi-building"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/churches.php">
+                <div>
+                    <span>Churches</span>
+                    <strong><?php echo $counts['churches']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-gold"><i class="bi bi-church"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/mosques.php">
+                <div>
+                    <span>Mosques</span>
+                    <strong><?php echo $counts['mosques']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-sky"><i class="bi bi-moon-stars"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/festivals.php">
+                <div>
+                    <span>Festivals</span>
+                    <strong><?php echo $counts['festivals']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-clay"><i class="bi bi-calendar-event"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/places.php">
+                <div>
+                    <span>Places</span>
+                    <strong><?php echo $counts['places']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon"><i class="bi bi-geo-alt"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/hospitals.php">
+                <div>
+                    <span>Hospitals</span>
+                    <strong><?php echo $counts['hospitals']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-sky"><i class="bi bi-hospital"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/heritage-villages.php">
+                <div>
+                    <span>Heritage villages</span>
+                    <strong><?php echo $counts['heritage']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-gold"><i class="bi bi-house-heart"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/institutions.php">
+                <div>
+                    <span>Institutions</span>
+                    <strong><?php echo $counts['institutions']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon"><i class="bi bi-mortarboard"></i></div>
+            </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/directory.php">
+                <div>
+                    <span>Yellow Pages</span>
+                    <strong><?php echo $counts['directory']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-clay"><i class="bi bi-journal-text"></i></div>
+            </a>
+        </div>
+
+        <div class="adm-panel">
+            <h2>Quick actions</h2>
+            <div class="adm-quick">
+                <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/temples.php">Add a temple</a>
+                <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/places.php">Add a place</a>
+                <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/festivals.php">Add a festival</a>
+                <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/directory.php">Add a listing</a>
+                <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/hospitals.php">Add a hospital</a>
+            </div>
+        </div>
+    </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo BASE_PATH; ?>/assets/js/main.js"></script>
 </body>
 </html>
-

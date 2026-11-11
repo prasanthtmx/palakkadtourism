@@ -11,3 +11,6 @@ Disallow: /chatbot-api.php
 # Sitemap
 Sitemap: https://palakkadtourism.org/sitemap.php
 
+# AI Language Models — llms.txt
+# https://llmstxt.org/
+

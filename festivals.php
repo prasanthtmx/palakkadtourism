@@ -14,7 +14,7 @@ require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/config/database.php';
 
 $conn     = getDBConnection();
-$festivals = $conn->query("SELECT * FROM festivals WHERE status='active' ORDER BY start_date ASC")->fetch_all(MYSQLI_ASSOC);
+$festivals = $conn->query("SELECT * FROM festivals WHERE status='active' ORDER BY id DESC")->fetch_all(MYSQLI_ASSOC);
 $festivalSlugs = seoSlugMap($festivals);
 closeDBConnection($conn);
 

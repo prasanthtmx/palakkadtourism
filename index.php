@@ -13,8 +13,9 @@ $conn = getDBConnection();
 // Get featured places (limit to 5, excluding Malampuzha)
 $featuredPlaces = $conn->query("SELECT * FROM places WHERE status='active' AND name NOT LIKE '%Malampuzha%' ORDER BY id DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
 
-// Get upcoming festivals/events
-$upcomingEvents = $conn->query("SELECT * FROM festivals WHERE status='active' AND start_date >= CURDATE() ORDER BY start_date ASC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
+// Latest festivals for the homepage events box (newest first)
+$upcomingEvents = $conn->query("SELECT * FROM festivals WHERE status='active' ORDER BY id DESC LIMIT 1")->fetch_all(MYSQLI_ASSOC);
+$upcomingEventSlugs = seoSlugMap($upcomingEvents ?: []);
 
 closeDBConnection($conn);
 
@@ -353,26 +354,36 @@ echo json_encode($faqPage, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                     </header>
                     <?php if (!empty($upcomingEvents)): ?>
                         <div class="events-list home-intro-events-list">
-                            <?php foreach ($upcomingEvents as $event): ?>
-                            <div class="event-item home-intro-event">
+                            <?php foreach ($upcomingEvents as $event):
+                                $eventUrl = getFestivalUrl($event['id'], $event['name'], $upcomingEventSlugs[(int) $event['id']] ?? null);
+                                $dateLabel = '';
+                                if (!empty($event['start_date']) && $event['start_date'] !== '0000-00-00') {
+                                    try {
+                                        $startDate = new DateTime($event['start_date']);
+                                        $dateLabel = $startDate->format('M j, Y');
+                                        if (!empty($event['end_date']) && $event['end_date'] !== $event['start_date'] && $event['end_date'] !== '0000-00-00') {
+                                            $endDate = new DateTime($event['end_date']);
+                                            $dateLabel .= ' – ' . $endDate->format('M j, Y');
+                                        }
+                                    } catch (Exception $e) {
+                                        $dateLabel = '';
+                                    }
+                                }
+                            ?>
+                            <a class="event-item home-intro-event" href="<?php echo htmlspecialchars($eventUrl); ?>">
                                 <h5 class="home-intro-event-title"><?php echo htmlspecialchars($event['name']); ?></h5>
+                                <?php if ($dateLabel): ?>
                                 <p class="home-intro-event-meta mb-1">
                                     <span class="home-intro-event-date"><i class="bi bi-calendar3" aria-hidden="true"></i>
-                                    <?php
-                                    $startDate = new DateTime($event['start_date']);
-                                    $endDate = new DateTime($event['end_date']);
-                                    echo $startDate->format('M j, Y');
-                                    if ($event['start_date'] != $event['end_date']) {
-                                        echo ' – ' . $endDate->format('M j, Y');
-                                    }
-                                    ?></span>
+                                    <?php echo htmlspecialchars($dateLabel); ?></span>
                                 </p>
-                                <?php if ($event['location']): ?>
+                                <?php endif; ?>
+                                <?php if (!empty($event['location'])): ?>
                                 <p class="home-intro-event-location mb-0">
                                     <i class="bi bi-geo-alt" aria-hidden="true"></i> <?php echo htmlspecialchars($event['location']); ?>
                                 </p>
                                 <?php endif; ?>
-                            </div>
+                            </a>
                             <?php endforeach; ?>
                         </div>
                         <a href="<?php echo BASE_PATH; ?>/festivals.php" class="btn home-intro-events-btn rounded-pill px-4 w-100 mt-3">
