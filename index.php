@@ -7,6 +7,7 @@ $pageOgImage = 'assets/images/banner.jpg';
 $pageHeroPreload = 'assets/images/banner.jpg';
 require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/includes/district_officials.php';
 
 $conn = getDBConnection();
 
@@ -16,6 +17,7 @@ $featuredPlaces = $conn->query("SELECT * FROM places WHERE status='active' AND n
 // Latest festivals for the homepage events box (newest first)
 $upcomingEvents = $conn->query("SELECT * FROM festivals WHERE status='active' ORDER BY id DESC LIMIT 1")->fetch_all(MYSQLI_ASSOC);
 $upcomingEventSlugs = seoSlugMap($upcomingEvents ?: []);
+$districtOfficials = fetchLatestDistrictOfficials($conn);
 
 closeDBConnection($conn);
 
@@ -330,6 +332,21 @@ echo json_encode($faqPage, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                         </li>
                     </ul>
                 </aside>
+
+                <aside class="home-toofan info-box info-box--home info-box--toofan shadow-lg rounded-4 p-4 p-lg-5 mt-4" aria-labelledby="toofan-heading">
+                    <header class="home-intro-card-header home-toofan-header mb-3">
+                        <span class="home-intro-card-icon home-toofan-icon" aria-hidden="true"><i class="bi bi-shield-exclamation"></i></span>
+                        <div>
+                            <h2 id="toofan-heading" class="mb-0 home-plan-trip-title">Operation Toofan</h2>
+                            <p class="home-plan-trip-sub text-muted small mb-0 mt-1">The Narco Hunt · Kerala Police &amp; Home Department</p>
+                        </div>
+                    </header>
+                    <p class="home-toofan-lead mb-3">A statewide anti-narcotics campaign to stop drug trafficking and keep Kerala’s towns and tourist places safe — including Palakkad.</p>
+                    <ul class="list-unstyled home-toofan-points mb-0">
+                        <li>Do not buy, carry, or use narcotics. Possession is a criminal offence.</li>
+                        <li>If you see drug activity, report it to Kerala Police on <a href="tel:112">112</a> and help keep Palakkad drug-free.</li>
+                    </ul>
+                </aside>
             </div>
 
             <!-- Upcoming Events -->
@@ -407,6 +424,48 @@ echo json_encode($faqPage, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                         </div>
                     </div>
                 </article>
+
+                <?php if (!empty($districtOfficials)): ?>
+                <aside class="home-officials info-box info-box--home info-box--officials shadow-lg rounded-4 p-4 mt-4" aria-labelledby="officials-heading">
+                    <header class="home-intro-card-header home-officials-header mb-3">
+                        <span class="home-intro-card-icon home-officials-icon" aria-hidden="true"><i class="bi bi-person-badge"></i></span>
+                        <div>
+                            <h2 id="officials-heading" class="mb-0 home-plan-trip-title">District administration</h2>
+                            <p class="home-plan-trip-sub text-muted small mb-0 mt-1">Collector, MLA, MP, Police Chief &amp; ADM</p>
+                        </div>
+                    </header>
+                    <ul class="list-unstyled home-officials-list mb-0">
+                        <?php foreach ($districtOfficials as $official):
+                            $landline = trim((string) ($official['landline'] ?? ''));
+                            $telHref = $landline !== '' ? preg_replace('/[^\d+]/', '', $landline) : '';
+                        ?>
+                        <li class="home-officials-item">
+                            <p class="home-officials-role mb-1"><?php echo htmlspecialchars($official['office_label']); ?></p>
+                            <p class="home-officials-name mb-1"><?php echo htmlspecialchars($official['name']); ?></p>
+                            <?php if (!empty($official['area'])): ?>
+                            <p class="home-officials-area mb-1"><?php echo htmlspecialchars($official['area']); ?></p>
+                            <?php endif; ?>
+                            <?php if ($landline !== ''): ?>
+                            <p class="home-officials-meta mb-1">
+                                <i class="bi bi-telephone" aria-hidden="true"></i>
+                                <?php if ($telHref !== ''): ?>
+                                <a href="tel:<?php echo htmlspecialchars($telHref); ?>"><?php echo htmlspecialchars($landline); ?></a>
+                                <?php else: ?>
+                                <?php echo htmlspecialchars($landline); ?>
+                                <?php endif; ?>
+                            </p>
+                            <?php endif; ?>
+                            <?php if (!empty($official['address'])): ?>
+                            <p class="home-officials-meta mb-0">
+                                <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                                <?php echo nl2br(htmlspecialchars($official['address'])); ?>
+                            </p>
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </aside>
+                <?php endif; ?>
 
                 <aside class="home-trending info-box info-box--home info-box--trending shadow-lg rounded-4 p-4 mt-4" aria-labelledby="trending-heading">
                     <header class="home-intro-card-header home-trending-header mb-3">

@@ -74,6 +74,7 @@ require __DIR__ . '/includes/head.php';
         <div class="admin-hero">
             <div>
                 <h1>Reset password</h1>
+                <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
                 <p>Change the password for <?php echo htmlspecialchars($adminUsername !== '' ? $adminUsername : 'this admin account'); ?>.</p>
             </div>
         </div>

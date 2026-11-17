@@ -264,8 +264,11 @@ require __DIR__ . '/includes/head.php';
     <div class="container-fluid">
         <div class="row">
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-2 border-bottom">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-start pt-2 pb-2 mb-2 border-bottom">
+                    <div>
                     <h1 class="h4">Yellow Pages directory</h1>
+                    <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
+                    </div>
                     <a href="<?php echo htmlspecialchars(BASE_PATH . '/yellow-pages.php'); ?>" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">View public site</a>
                 </div>
 

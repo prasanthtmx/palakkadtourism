@@ -182,22 +182,54 @@ body.admin-page a {
 }
 
 body.admin-page > .container-fluid,
-body.admin-page > .admin-main {
-    padding: 1.35rem 1.5rem 2.5rem;
+body.admin-page > .admin-main,
+body.admin-page main.admin-main {
+    padding: 1.5rem 1.75rem 2.5rem;
+    box-sizing: border-box;
+    overflow-x: clip;
 }
 
 body.admin-page .container-fluid > .row {
-    margin: 0;
+    --bs-gutter-x: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
-body.admin-page .container-fluid > .row > [class*="col-"],
-body.admin-page main.admin-main,
+body.admin-page .container-fluid > .row > [class*="col-"] {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 body.admin-page main.col-md-9,
 body.admin-page main.col-lg-10 {
     width: 100%;
     max-width: 100%;
     flex: 1 1 100%;
-    padding: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Nested Bootstrap rows must not pull cards into the page edges */
+body.admin-page .row .row {
+    --bs-gutter-x: 1.25rem;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+body.admin-page .row .row > [class*="col"] {
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+}
+
+body.admin-page .row .row > [class*="col"]:first-child {
+    padding-left: 0;
+}
+
+body.admin-page .row .row > [class*="col"]:last-child {
+    padding-right: 0;
 }
 
 body.admin-page .admin-sidebar.col-md-3,
@@ -218,19 +250,98 @@ body.admin-page .admin-page-head {
 
 body.admin-page main > .d-flex.border-bottom .h3,
 body.admin-page main > .d-flex.border-bottom .h4,
-body.admin-page .admin-page-head h1 {
+body.admin-page .admin-page-head h1,
+body.admin-page .admin-header h2 {
     margin: 0;
     font-size: 1.45rem;
     font-weight: 700;
     letter-spacing: -0.03em;
 }
 
+body.admin-page .admin-header .container {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .admin-hero {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 1rem;
     margin-bottom: 1.4rem;
+}
+
+.admin-hero .btn {
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+
+.admin-breadcrumbs {
+    margin: 0.35rem 0 0.45rem;
+}
+
+.admin-breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.2rem 0.45rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
+    color: var(--adm-muted);
+}
+
+.admin-breadcrumbs li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.admin-breadcrumbs li + li::before {
+    content: '/';
+    color: #b7c0bb;
+    font-weight: 600;
+}
+
+.admin-breadcrumbs a {
+    color: var(--adm-accent);
+    font-weight: 600;
+}
+
+.admin-breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.admin-breadcrumbs [aria-current="page"] {
+    color: var(--adm-ink);
+    font-weight: 600;
+}
+
+.admin-table-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.admin-table-actions form {
+    display: inline;
+    margin: 0;
+}
+
+body.admin-page .table td.admin-td-address {
+    max-width: 16rem;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+body.admin-page .adm-panel > .table-responsive {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .admin-hero h1 {
@@ -479,8 +590,8 @@ body.admin-page .admin-header {
 
 @media (max-width: 991.98px) {
     body.admin-page {
-        padding-left: 0;
-        padding-top: 3.6rem;
+        padding-left: 0 !important;
+        padding-top: 3.6rem !important;
     }
 
     .admin-menu-toggle {
@@ -521,9 +632,9 @@ body.admin-page .admin-header {
         grid-template-columns: 1fr;
     }
 
-    body.admin-page .container-fluid > .row > [class*="col-"],
-    body.admin-page main.col-md-9,
-    body.admin-page main.col-lg-10 {
-        padding: 1rem;
+    body.admin-page > .container-fluid,
+    body.admin-page > .admin-main,
+    body.admin-page main.admin-main {
+        padding: 1.15rem 1.15rem 2rem;
     }
 }

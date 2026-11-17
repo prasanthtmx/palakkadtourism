@@ -14,12 +14,19 @@
     var history = [];
     var busy = false;
 
+    function track(name, params) {
+        if (typeof window.pkdTrack === 'function') {
+            window.pkdTrack(name, params);
+        }
+    }
+
     function setOpen(open) {
         panel.hidden = !open;
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
         root.classList.toggle('pkd-chat--open', open);
         if (open && input) {
             input.focus();
+            track('chat_open');
         }
     }
 
@@ -50,6 +57,7 @@
         if (input) {
             input.value = '';
         }
+        track('chat_message', { engagement_time_msec: 1 });
         setBusy(true);
         var thinking = document.createElement('div');
         thinking.className = 'pkd-chat-msg pkd-chat-msg--bot pkd-chat-msg--wait';

@@ -113,6 +113,7 @@ require __DIR__ . '/includes/head.php';
                 <div class="admin-header">
                     <div class="container">
                         <h2><i class="bi bi-image"></i> Fetch Temple Images from Google</h2>
+                        <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
                     </div>
                 </div>
                 

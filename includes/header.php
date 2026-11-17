@@ -94,76 +94,116 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
     <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/chatbot.css?v=1">
     <?php endif; ?>
     
-    <!-- Google Analytics 4 - Enhanced Tracking -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RLBH00600Y"></script>
+    <?php
+    $gaPageType = $seoPageSlug;
+    $gaContentGroups = [
+        'index' => 'Home',
+        'temples' => 'Religious Places',
+        'temple' => 'Religious Places',
+        'churches' => 'Religious Places',
+        'church' => 'Religious Places',
+        'mosques' => 'Religious Places',
+        'mosque' => 'Religious Places',
+        'jain-temple' => 'Religious Places',
+        'religious-places' => 'Religious Places',
+        'places' => 'Attractions',
+        'place' => 'Attractions',
+        'festivals' => 'Attractions',
+        'festival' => 'Attractions',
+        'heritage-villages' => 'Attractions',
+        'heritage-village' => 'Attractions',
+        'institutions' => 'Attractions',
+        'institution' => 'Attractions',
+        'fort' => 'Attractions',
+        'rivers' => 'Attractions',
+        'mountain-ranges-passes' => 'Attractions',
+        'vintage-gallery' => 'Attractions',
+        'villages-taluks' => 'Attractions',
+        'how-to-reach' => 'Information',
+        'yellow-pages' => 'Directory',
+        'yellow-page' => 'Directory',
+        'yellow-pages-submit' => 'Directory',
+        'hospitals' => 'Healthcare',
+        'hospitals-government' => 'Healthcare',
+        'hospitals-private' => 'Healthcare',
+        'hospitals-ayurveda' => 'Healthcare',
+        'hospitals-homeopathy' => 'Healthcare',
+        'donate-blood' => 'Healthcare',
+        'about' => 'Information',
+        'history' => 'Information',
+        'art-culture' => 'Information',
+        'customs' => 'Information',
+        'cookies-policy' => 'Information',
+        'kerala-assembly-election-2026' => 'Elections',
+        'palakkad-assembly-constituencies-2026' => 'Elections',
+    ];
+    $gaContentGroup = $gaContentGroups[$gaPageType] ?? 'General';
+    if ($gaContentGroup === 'General') {
+        if (strpos($gaPageType, 'dam-') === 0) {
+            $gaContentGroup = 'Attractions';
+        } elseif (strpos($gaPageType, 'municipality-') === 0) {
+            $gaContentGroup = 'Municipalities';
+        }
+    }
+    $gaIdJs = json_encode(GA_MEASUREMENT_ID, JSON_UNESCAPED_SLASHES);
+    $gaTitleJs = json_encode($seoTitle, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $gaPageTypeJs = json_encode($gaPageType, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $gaGroupJs = json_encode($gaContentGroup, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    ?>
+    <!-- Google Analytics 4 (Consent Mode v2) -->
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        
-        // Configure GA4 with maximum properties
-        gtag('config', 'G-RLBH00600Y', {
-            // Page Information
-            'page_title': '<?php echo htmlspecialchars($seoTitle, ENT_QUOTES); ?>',
-            'page_location': '<?php echo htmlspecialchars($seoCanonicalUrl, ENT_QUOTES, 'UTF-8'); ?>',
-            'page_path': '<?php echo htmlspecialchars($seoCanonicalPath, ENT_QUOTES, 'UTF-8'); ?>',
-            
-            // Content Grouping
-            'content_group1': '<?php echo basename($_SERVER['PHP_SELF'], ".php"); ?>',
-            'content_group2': '<?php 
-                $pageType = basename($_SERVER['PHP_SELF'], ".php");
-                if (in_array($pageType, ['temples', 'churches', 'mosques', 'jain-temple'])) echo "Religious Places";
-                elseif (in_array($pageType, ['places', 'festivals', 'heritage-villages', 'institutions'])) echo "Attractions";
-                elseif (in_array($pageType, ['yellow-pages', 'yellow-page', 'yellow-pages-submit'])) echo "Directory";
-                elseif (in_array($pageType, ['hospitals', 'hospitals-government', 'hospitals-private', 'hospitals-ayurveda', 'hospitals-homeopathy'])) echo "Healthcare";
-                elseif (in_array($pageType, ['about', 'history', 'art-culture', 'customs'])) echo "Information";
-                else echo "General";
-            ?>',
-            'content_group3': '<?php echo isset($pageDescription) ? htmlspecialchars(substr($pageDescription, 0, 50), ENT_QUOTES) : ""; ?>',
-            
-            // User Engagement
-            'engagement_time_msec': 0,
-            'session_engaged': false,
-            
-            // Custom Dimensions
-            'custom_map': {
-                'dimension1': 'page_type',
-                'dimension2': 'content_category',
-                'dimension3': 'user_segment'
-            },
-            
-            // Enhanced Ecommerce (if needed)
-            'send_page_view': false,
-            'anonymize_ip': false,
-            'cookie_flags': 'SameSite=None;Secure',
-            
-            // Site Information
-            'site_name': 'Palakkad Tourism',
-            'site_url': '<?php echo SITE_URL; ?>'
+        gtag('consent', 'default', {
+            analytics_storage: 'granted',
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
         });
-        
-        // Enhanced page view tracking with custom parameters
+        window.pkdHasAnalyticsConsent = true;
+        try {
+            if (localStorage.getItem('cookie_consent') === 'declined') {
+                window.pkdHasAnalyticsConsent = false;
+                gtag('consent', 'update', {
+                    analytics_storage: 'denied',
+                    ad_storage: 'denied',
+                    ad_user_data: 'denied',
+                    ad_personalization: 'denied'
+                });
+            }
+        } catch (e) {}
+        window.pkdTrack = function (name, params) {
+            if (typeof gtag === 'function') {
+                gtag('event', name, params || {});
+            }
+        };
+        window.pkdSetConsent = function (accepted) {
+            var state = accepted ? 'granted' : 'denied';
+            window.pkdHasAnalyticsConsent = !!accepted;
+            gtag('consent', 'update', {
+                analytics_storage: state,
+                ad_storage: state,
+                ad_user_data: state,
+                ad_personalization: state
+            });
+        };
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo htmlspecialchars(GA_MEASUREMENT_ID, ENT_QUOTES, 'UTF-8'); ?>"></script>
+    <script>
+        gtag('js', new Date());
+        gtag('config', <?php echo $gaIdJs; ?>, {
+            send_page_view: false,
+            page_title: <?php echo $gaTitleJs; ?>
+        });
         gtag('event', 'page_view', {
-            'page_title': '<?php echo htmlspecialchars($seoTitle, ENT_QUOTES); ?>',
-            'page_location': '<?php echo htmlspecialchars($seoCanonicalUrl, ENT_QUOTES, 'UTF-8'); ?>',
-            'page_path': '<?php echo htmlspecialchars($seoCanonicalPath, ENT_QUOTES, 'UTF-8'); ?>',
-            'page_type': '<?php echo basename($_SERVER['PHP_SELF'], ".php"); ?>',
-            'content_category': '<?php 
-                $pageType = basename($_SERVER['PHP_SELF'], ".php");
-                if (in_array($pageType, ['temples', 'churches', 'mosques', 'jain-temple'])) echo "Religious Places";
-                elseif (in_array($pageType, ['places', 'festivals', 'heritage-villages', 'institutions'])) echo "Attractions";
-                elseif (in_array($pageType, ['yellow-pages', 'yellow-page', 'yellow-pages-submit'])) echo "Directory";
-                elseif (in_array($pageType, ['hospitals', 'hospitals-government', 'hospitals-private', 'hospitals-ayurveda', 'hospitals-homeopathy'])) echo "Healthcare";
-                elseif (in_array($pageType, ['about', 'history', 'art-culture', 'customs'])) echo "Information";
-                else echo "General";
-            ?>',
-            'page_referrer': document.referrer || 'direct',
-            'user_agent': navigator.userAgent,
-            'screen_resolution': screen.width + 'x' + screen.height,
-            'viewport_size': window.innerWidth + 'x' + window.innerHeight,
-            'language': navigator.language || navigator.userLanguage
+            page_title: <?php echo $gaTitleJs; ?>,
+            content_group: <?php echo $gaGroupJs; ?>,
+            page_type: <?php echo $gaPageTypeJs; ?>
+
         });
     </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo htmlspecialchars(ADSENSE_CLIENT_ID, ENT_QUOTES, 'UTF-8'); ?>"
+         crossorigin="anonymous"></script>
     
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
@@ -294,9 +334,6 @@ if (!headers_sent() && session_status() !== PHP_SESSION_ACTIVE) {
     </script>
     
     <?php if (!empty($pageHeadExtra)) echo $pageHeadExtra; ?>
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8043296707059876"
-         crossorigin="anonymous"></script>
 </head>
 <body>
     <a class="visually-hidden-focusable" href="#main-content">Skip to content</a>

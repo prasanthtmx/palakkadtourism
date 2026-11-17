@@ -54,6 +54,9 @@ $adminNavActive = static function (array $files) use ($adminCurrent): string {
         <a class="admin-nav-link<?php echo $adminNavActive(['directory.php']); ?>" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/directory.php">
             <i class="bi bi-journal-text"></i> Yellow Pages
         </a>
+        <a class="admin-nav-link<?php echo $adminNavActive(['officials.php']); ?>" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/officials.php">
+            <i class="bi bi-person-badge"></i> District officials
+        </a>
 
         <p class="admin-nav-label">Tools</p>
         <a class="admin-nav-link<?php echo $adminNavActive(['import_temples.php']); ?>" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/import_temples.php">

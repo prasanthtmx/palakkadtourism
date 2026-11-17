@@ -60,6 +60,7 @@ require __DIR__ . '/includes/head.php';
                 <div class="admin-header">
                     <div class="container">
                         <h2><i class="bi bi-building"></i> Update Mosques</h2>
+                        <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
                     </div>
                 </div>
                 

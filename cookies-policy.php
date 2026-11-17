@@ -16,7 +16,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <h1 class="display-4 mb-4">Cookies Policy</h1>
-                <p class="text-muted mb-4"><small>Last updated: November 2024</small></p>
+                <p class="text-muted mb-4"><small>Last updated: November 2026</small></p>
 
                 <p class="lead">This Cookies Policy explains how Palakkad Tourism (<a href="<?php echo htmlspecialchars(SITE_URL); ?>"><?php echo htmlspecialchars(SITE_URL); ?></a>) uses cookies and similar technologies when you visit our website.</p>
 
@@ -39,8 +39,8 @@ require_once __DIR__ . '/includes/header.php';
                         </thead>
                         <tbody>
                             <tr>
-                                <td><code>cookie_consent</code></td>
-                                <td>Stores your cookie consent preferences</td>
+                                <td><code>cookie_consent</code> (cookie and local storage)</td>
+                                <td>Stores your cookie consent preferences (Accept or Decline)</td>
                                 <td>1 year</td>
                             </tr>
                         </tbody>
@@ -48,7 +48,7 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <h3 class="mt-4 mb-3">2. Analytics Cookies</h3>
-                <p>We use Google Analytics 4 to understand how visitors interact with our website. This helps us improve content and user experience. The data collected is aggregated and anonymous.</p>
+                <p>We use Google Analytics 4 to understand how visitors interact with our website. This helps us improve content and user experience. Analytics cookies are used unless you click <strong>Decline</strong>. The data collected is aggregated, and IP addresses are anonymised.</p>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="table-light">
@@ -71,12 +71,6 @@ require_once __DIR__ . '/includes/header.php';
                                 <td>Google Analytics</td>
                                 <td>Maintains session state</td>
                                 <td>2 years</td>
-                            </tr>
-                            <tr>
-                                <td><code>_gid</code></td>
-                                <td>Google Analytics</td>
-                                <td>Distinguishes users (session)</td>
-                                <td>24 hours</td>
                             </tr>
                         </tbody>
                     </table>
@@ -123,7 +117,7 @@ require_once __DIR__ . '/includes/header.php';
                 <h2 class="mt-5 mb-3">Managing Your Cookie Preferences</h2>
                 <p>You can manage or withdraw your consent at any time. Here are your options:</p>
                 <ul>
-                    <li><strong>Cookie banner:</strong> Use the Accept or Decline buttons when you first visit the site.</li>
+                    <li><strong>Cookie banner:</strong> Use the Accept or Decline buttons when you first visit the site. Decline turns analytics and advertising cookies off.</li>
                     <li><strong>Browser settings:</strong> Most browsers allow you to block or delete cookies. See your browser's help pages for instructions.</li>
                     <li><strong>Google opt-out:</strong> You can opt out of Google Analytics tracking at <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">tools.google.com/dlpage/gaoptout</a>.</li>
                     <li><strong>Ad personalisation:</strong> Manage Google ad settings at <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">adssettings.google.com</a>.</li>

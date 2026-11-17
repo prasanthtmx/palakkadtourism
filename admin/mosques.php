@@ -90,8 +90,11 @@ require __DIR__ . '/includes/head.php';
     <div class="container-fluid">
         <div class="row">
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-2 border-bottom">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-start pt-2 pb-2 mb-2 border-bottom">
+                    <div>
                     <h1 class="h4">Manage Mosques</h1>
+                    <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
+                    </div>
                     <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#mosqueModal">
                         <i class="bi bi-plus-circle"></i> Add New Mosque
                     </button>

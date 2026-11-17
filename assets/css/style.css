@@ -252,6 +252,8 @@ p, a, span, div, li, td, th,
 .home-intro .info-box--about::before,
 .home-intro .info-box--events::before,
 .home-intro .info-box--plan::before,
+.home-intro .info-box--toofan::before,
+.home-intro .info-box--officials::before,
 .home-intro .info-box--trending::before,
 .home-intro .info-box--explore::before {
     content: '';
@@ -266,6 +268,141 @@ p, a, span, div, li, td, th,
 
 .home-intro .info-box--plan::before {
     background: linear-gradient(90deg, #2d5a8c, #7b5aa6);
+}
+
+.home-intro .info-box--toofan::before {
+    background: linear-gradient(90deg, #7f1d1d, #1e3a5f);
+}
+
+.home-toofan-icon {
+    background: linear-gradient(145deg, #7f1d1d 0%, #1e3a5f 100%) !important;
+}
+
+.home-intro .info-box--toofan h2 {
+    font-size: 1.18rem;
+}
+
+.home-intro .info-box--toofan h2::after {
+    width: 42px;
+    margin-top: 0.45rem;
+    background: linear-gradient(90deg, #7f1d1d, #1e3a5f);
+}
+
+.home-toofan-lead {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #334048;
+}
+
+.home-toofan-points {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.home-toofan-points li {
+    position: relative;
+    padding: 0.75rem 0.9rem 0.75rem 2.35rem;
+    background: linear-gradient(135deg, #fbfcfd 0%, #f3f7f8 100%);
+    border: 1px solid rgba(0, 25, 37, 0.08);
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #001925;
+}
+
+.home-toofan-points li::before {
+    content: '';
+    position: absolute;
+    left: 0.85rem;
+    top: 0.95rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: #7f1d1d;
+    box-shadow: 0 0 0 4px rgba(127, 29, 29, 0.12);
+}
+
+.home-toofan-points a {
+    color: #1e3a5f;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.home-toofan-points a:hover {
+    text-decoration: underline;
+}
+
+.home-intro .info-box--officials::before {
+    background: linear-gradient(90deg, #1e4d8c, #157a5c);
+}
+
+.home-officials-icon {
+    background: linear-gradient(145deg, #1e4d8c 0%, #157a5c 100%) !important;
+}
+
+.home-intro .info-box--officials h2 {
+    font-size: 1.18rem;
+}
+
+.home-intro .info-box--officials h2::after {
+    width: 42px;
+    margin-top: 0.45rem;
+    background: linear-gradient(90deg, #1e4d8c, #157a5c);
+}
+
+.home-officials-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.home-officials-item {
+    padding: 0.8rem 0.9rem;
+    background: linear-gradient(135deg, #fbfcfd 0%, #f3f7f8 100%);
+    border: 1px solid rgba(0, 25, 37, 0.08);
+    border-radius: 14px;
+}
+
+.home-officials-role {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1e4d8c;
+}
+
+.home-officials-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #001925;
+    line-height: 1.3;
+}
+
+.home-officials-area {
+    font-size: 0.8rem;
+    color: #5a6b75;
+}
+
+.home-officials-meta {
+    font-size: 0.82rem;
+    color: #334048;
+    line-height: 1.45;
+}
+
+.home-officials-meta i {
+    margin-right: 0.3rem;
+    color: #157a5c;
+}
+
+.home-officials-meta a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-officials-meta a:hover {
+    color: #157a5c;
+    text-decoration: underline;
 }
 
 .home-intro .info-box--trending::before {

@@ -1,244 +1,100 @@
 // Main JavaScript for Palakkad Tourism
 
-// Google Analytics 4 Enhanced Tracking
+// Google Analytics 4 — useful events only (consent-aware)
 (function() {
-    // Track outbound links
+    function track(name, params) {
+        if (typeof window.pkdTrack === 'function') {
+            window.pkdTrack(name, params);
+        } else if (typeof gtag === 'function') {
+            gtag('event', name, params || {});
+        }
+    }
+
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
-        if (link && link.href) {
-            const href = link.href;
-            const isExternal = link.hostname && link.hostname !== window.location.hostname;
-            const isDownload = /\.(pdf|doc|docx|xls|xlsx|zip|rar|exe)$/i.test(href);
-            const isEmail = href.startsWith('mailto:');
-            const isPhone = href.startsWith('tel:');
-            
-            if (isExternal) {
-                gtag('event', 'click', {
-                    'event_category': 'outbound',
-                    'event_label': href,
-                    'transport_type': 'beacon',
-                    'link_url': href
-                });
-            } else if (isDownload) {
-                gtag('event', 'file_download', {
-                    'file_name': href.split('/').pop(),
-                    'file_extension': href.split('.').pop(),
-                    'link_url': href
-                });
-            } else if (isEmail) {
-                gtag('event', 'email_click', {
-                    'email_address': href.replace('mailto:', ''),
-                    'link_url': href
-                });
-            } else if (isPhone) {
-                gtag('event', 'phone_click', {
-                    'phone_number': href.replace('tel:', ''),
-                    'link_url': href
-                });
-            } else {
-                // Internal link tracking
-                gtag('event', 'click', {
-                    'event_category': 'internal_link',
-                    'event_label': link.textContent.trim(),
-                    'link_url': href
-                });
-            }
+        if (!link || !link.href) {
+            return;
         }
-    });
-    
-    // Track button clicks
-    document.addEventListener('click', function(e) {
-        const button = e.target.closest('button');
-        if (button) {
-            const buttonText = button.textContent.trim() || button.getAttribute('aria-label') || 'Button';
-            gtag('event', 'button_click', {
-                'button_text': buttonText,
-                'button_id': button.id || '',
-                'button_class': button.className || ''
+        const href = link.href;
+        const isDownload = /\.(pdf|doc|docx|xls|xlsx|zip|rar)(?:$|[?#])/i.test(href);
+
+        if (href.indexOf('mailto:') === 0) {
+            track('email_click', { transport_type: 'beacon' });
+            return;
+        }
+        if (href.indexOf('tel:') === 0) {
+            track('phone_click', { transport_type: 'beacon' });
+            return;
+        }
+        if (isDownload) {
+            const fileName = href.split('/').pop().split('?')[0];
+            track('file_download', {
+                file_name: fileName,
+                file_extension: (fileName.split('.').pop() || '').toLowerCase(),
+                transport_type: 'beacon'
+            });
+            return;
+        }
+        if (link.hostname && link.hostname !== window.location.hostname) {
+            track('click', {
+                event_category: 'outbound',
+                link_url: href,
+                transport_type: 'beacon'
             });
         }
     });
-    
-    // Track form submissions
+
     document.addEventListener('submit', function(e) {
         const form = e.target;
-        if (form.tagName === 'FORM') {
-            gtag('event', 'form_submit', {
-                'form_id': form.id || '',
-                'form_class': form.className || '',
-                'form_action': form.action || '',
-                'form_method': form.method || 'get'
-            });
+        if (!form || form.tagName !== 'FORM' || form.id === 'pkd-chat-form') {
+            return;
         }
-    });
-    
-    // Track search queries
-    document.addEventListener('submit', function(e) {
-        const form = e.target;
-        const searchInput = form.querySelector('input[name="search"]');
-        if (searchInput && searchInput.value) {
-            gtag('event', 'search', {
-                'search_term': searchInput.value,
-                'page_location': window.location.href
-            });
+
+        const searchInput = form.querySelector('input[name="search"], input[name="q"], input[type="search"]');
+        if (searchInput && searchInput.value.trim()) {
+            track('search', { search_term: searchInput.value.trim() });
+            return;
         }
-    });
-    
-    // Track scroll depth
-    let maxScroll = 0;
-    const scrollThresholds = [25, 50, 75, 90, 100];
-    const trackedThresholds = new Set();
-    
-    window.addEventListener('scroll', function() {
-        const scrollPercent = Math.round(
-            ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100
-        );
-        
-        if (scrollPercent > maxScroll) {
-            maxScroll = scrollPercent;
-            
-            scrollThresholds.forEach(threshold => {
-                if (scrollPercent >= threshold && !trackedThresholds.has(threshold)) {
-                    trackedThresholds.add(threshold);
-                    gtag('event', 'scroll', {
-                        'percent_scrolled': threshold
-                    });
-                }
-            });
-        }
-    });
-    
-    // Track time on page
-    let startTime = Date.now();
-    let timeTracked = false;
-    
-    setInterval(function() {
-        const timeOnPage = Math.round((Date.now() - startTime) / 1000);
-        
-        // Track at 30 seconds, 1 minute, 2 minutes, 5 minutes
-        if (!timeTracked && (timeOnPage === 30 || timeOnPage === 60 || timeOnPage === 120 || timeOnPage === 300)) {
-            gtag('event', 'timing_complete', {
-                'name': 'time_on_page',
-                'value': timeOnPage
-            });
-            if (timeOnPage >= 300) timeTracked = true;
-        }
-    }, 1000);
-    
-    // Track dropdown menu interactions
-    document.addEventListener('show.bs.dropdown', function(e) {
-        const dropdown = e.target.closest('.dropdown');
-        if (dropdown) {
-            const menuText = dropdown.querySelector('.dropdown-toggle').textContent.trim();
-            gtag('event', 'dropdown_open', {
-                'dropdown_name': menuText
-            });
-        }
-    });
-    
-    // Track modal opens
-    document.addEventListener('show.bs.modal', function(e) {
-        const modal = e.target;
-        gtag('event', 'modal_open', {
-            'modal_id': modal.id || '',
-            'modal_title': modal.querySelector('.modal-title')?.textContent.trim() || ''
+
+        track('form_submit', {
+            form_id: form.id || '',
+            form_name: form.getAttribute('name') || form.id || ''
         });
     });
-    
-    // Track pagination clicks
-    document.addEventListener('click', function(e) {
-        const paginationLink = e.target.closest('.pagination a, .page-link');
-        if (paginationLink) {
-            gtag('event', 'pagination_click', {
-                'page_number': paginationLink.textContent.trim(),
-                'link_url': paginationLink.href
-            });
+
+    const scrollThresholds = [25, 50, 75, 90];
+    const trackedThresholds = {};
+    window.addEventListener('scroll', function() {
+        const height = document.documentElement.scrollHeight;
+        if (!height) {
+            return;
         }
-    });
-    
-    // Track filter changes
+        const scrollPercent = Math.round(((window.scrollY + window.innerHeight) / height) * 100);
+        scrollThresholds.forEach(function(threshold) {
+            if (scrollPercent >= threshold && !trackedThresholds[threshold]) {
+                trackedThresholds[threshold] = true;
+                track('scroll', { percent_scrolled: threshold });
+            }
+        });
+    }, { passive: true });
+
     document.addEventListener('change', function(e) {
         const select = e.target;
-        if (select.tagName === 'SELECT' && (select.name === 'type' || select.name === 'category')) {
-            gtag('event', 'filter_change', {
-                'filter_name': select.name,
-                'filter_value': select.value,
-                'page_location': window.location.href
+        if (select && select.tagName === 'SELECT' && (select.name === 'type' || select.name === 'category')) {
+            track('filter_change', {
+                filter_name: select.name,
+                filter_value: select.value
             });
         }
     });
-    
-    // Track card/item clicks (for listings)
-    document.addEventListener('click', function(e) {
-        const card = e.target.closest('.card');
-        if (card) {
-            const cardTitle = card.querySelector('.card-title, h5, h4');
-            if (cardTitle) {
-                gtag('event', 'card_click', {
-                    'card_title': cardTitle.textContent.trim(),
-                    'page_location': window.location.href
-                });
-            }
-        }
-    });
-    
-    // Track video plays (if any videos are added later)
+
     document.addEventListener('play', function(e) {
-        if (e.target.tagName === 'VIDEO') {
-            gtag('event', 'video_play', {
-                'video_title': e.target.getAttribute('title') || e.target.getAttribute('alt') || 'Video',
-                'video_url': e.target.src || ''
+        if (e.target && e.target.tagName === 'VIDEO') {
+            track('video_start', {
+                video_title: e.target.getAttribute('title') || e.target.getAttribute('aria-label') || 'Video'
             });
         }
     }, true);
-    
-    // Track image views (lazy loaded images)
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    gtag('event', 'image_view', {
-                        'image_url': img.src || '',
-                        'image_alt': img.alt || ''
-                    });
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-        
-        document.querySelectorAll('img[data-src], img[loading="lazy"]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-    
-    // Track page visibility changes
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            gtag('event', 'page_hidden', {
-                'time_on_page': Math.round((Date.now() - startTime) / 1000)
-            });
-        } else {
-            gtag('event', 'page_visible');
-        }
-    });
-    
-    // Track errors
-    window.addEventListener('error', function(e) {
-        gtag('event', 'exception', {
-            'description': e.message,
-            'fatal': false
-        });
-    });
-    
-    // Track when user leaves page
-    window.addEventListener('beforeunload', function() {
-        const timeOnPage = Math.round((Date.now() - startTime) / 1000);
-        gtag('event', 'page_exit', {
-            'time_on_page': timeOnPage,
-            'page_path': window.location.pathname
-        });
-    });
 })();
 
 // Weather API Configuration
@@ -371,26 +227,6 @@ function getWeatherIcon(desc, isDay) {
 
 // Initialize tooltips
 document.addEventListener('DOMContentLoaded', function() {
-    // Track page load time
-    if (window.performance && window.performance.timing) {
-        const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'page_load_time', {
-                'value': loadTime,
-                'metric_name': 'load_time',
-                'metric_value': loadTime
-            });
-        }
-    }
-    
-    // Track DOM ready time
-    const domReadyTime = Date.now() - (window.performance?.timing?.navigationStart || Date.now());
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'dom_ready', {
-            'value': domReadyTime
-        });
-    }
-    
     // Load weather data
     fetchWeather();
     
@@ -399,19 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize Bootstrap tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-    
-    // Track tooltip interactions
-    tooltipList.forEach(function(tooltip) {
-        tooltip._element.addEventListener('shown.bs.tooltip', function() {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'tooltip_view', {
-                    'tooltip_text': tooltip._element.getAttribute('data-bs-original-title') || tooltip._element.title
-                });
-            }
-        });
     });
 
     // Smooth scroll for anchor links

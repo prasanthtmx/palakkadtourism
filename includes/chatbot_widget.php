@@ -38,4 +38,4 @@ $chatApiUrl = BASE_PATH . '/chatbot-api.php';
         </form>
     </section>
 </div>
-<script src="<?php echo BASE_PATH; ?>/assets/js/chatbot.js?v=1" defer></script>
+<script src="<?php echo BASE_PATH; ?>/assets/js/chatbot.js?v=2" defer></script>

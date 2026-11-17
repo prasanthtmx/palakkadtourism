@@ -90,6 +90,7 @@ require __DIR__ . '/includes/head.php';
                 <div class="admin-header">
                     <div class="container">
                         <h2><i class="bi bi-building"></i> Import Temples</h2>
+                        <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
                     </div>
                 </div>
                 

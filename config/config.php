@@ -62,11 +62,23 @@ if (!defined('ALLOW_CREATE_ADMIN_SCRIPT')) {
 
 // Cache-bust main stylesheet (?v=… on the link). Bump this when assets/css/style.css changes.
 if (!defined('STYLE_CSS_V')) {
-    define('STYLE_CSS_V', '1.7.5');
+    define('STYLE_CSS_V', '1.7.7');
+}
+
+if (!defined('MAIN_JS_V')) {
+    define('MAIN_JS_V', '1.1.0');
+}
+
+if (!defined('GA_MEASUREMENT_ID')) {
+    define('GA_MEASUREMENT_ID', 'G-RLBH00600Y');
+}
+
+if (!defined('ADSENSE_CLIENT_ID')) {
+    define('ADSENSE_CLIENT_ID', 'ca-pub-8043296707059876');
 }
 
 if (!defined('ADMIN_CSS_V')) {
-    define('ADMIN_CSS_V', '1.0.1');
+    define('ADMIN_CSS_V', '1.0.4');
 }
 
 // Timezone

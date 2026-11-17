@@ -3,10 +3,12 @@ session_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/security.php';
+require_once __DIR__ . '/../includes/district_officials.php';
 
 requireAdminAuth();
 
 $conn = getDBConnection();
+ensureDistrictOfficialsTable($conn);
 
 $adminCount = static function ($conn, $table) {
     $table = preg_replace('/[^a-z0-9_]/i', '', (string) $table);
@@ -31,6 +33,7 @@ $counts = [
     'heritage' => $adminCount($conn, 'heritage_villages'),
     'institutions' => $adminCount($conn, 'institutions'),
     'directory' => $adminCount($conn, 'directory_entries'),
+    'officials' => $adminCount($conn, 'district_officials'),
 ];
 
 closeDBConnection($conn);
@@ -45,6 +48,7 @@ require __DIR__ . '/includes/head.php';
         <div class="admin-hero">
             <div>
                 <h1>Dashboard</h1>
+                <?php require __DIR__ . '/includes/breadcrumbs.php'; ?>
                 <p>Welcome back, <?php echo htmlspecialchars($adminName); ?>.</p>
             </div>
             <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
@@ -125,6 +129,14 @@ require __DIR__ . '/includes/head.php';
                 </div>
                 <div class="adm-stat-icon is-clay"><i class="bi bi-journal-text"></i></div>
             </a>
+            <a class="adm-stat" href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/officials.php">
+                <div>
+                    <span>District officials</span>
+                    <strong><?php echo $counts['officials']; ?></strong>
+                    <small>Manage</small>
+                </div>
+                <div class="adm-stat-icon is-gold"><i class="bi bi-person-badge"></i></div>
+            </a>
         </div>
 
         <div class="adm-panel">
@@ -135,6 +147,7 @@ require __DIR__ . '/includes/head.php';
                 <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/festivals.php">Add a festival</a>
                 <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/directory.php">Add a listing</a>
                 <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/hospitals.php">Add a hospital</a>
+                <a href="<?php echo htmlspecialchars(BASE_PATH); ?>/admin/officials.php">Add an official</a>
             </div>
         </div>
     </main>

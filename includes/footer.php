@@ -284,7 +284,7 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="<?php echo BASE_PATH; ?>/assets/js/main.js"></script>
+    <script src="<?php echo BASE_PATH; ?>/assets/js/main.js?v=<?php echo rawurlencode(MAIN_JS_V); ?>"></script>
     
     <?php
     if (!empty($showGeminiChat)) {
@@ -309,7 +309,7 @@
         <div class="cookie-banner-inner">
             <p class="cookie-banner-text">
                 <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
-                We use cookies to improve your experience, analyse traffic, and serve relevant ads. By clicking <strong>Accept</strong>, you consent to our use of cookies.
+                We use cookies to improve your experience, analyse traffic, and serve relevant ads. Click <strong>Decline</strong> to turn off analytics and advertising cookies.
                 <a href="<?php echo BASE_PATH; ?>/cookies-policy.php">Learn more</a>
             </p>
             <div class="cookie-banner-actions">
@@ -322,17 +322,30 @@
     (function () {
         var banner = document.getElementById('cookieBanner');
         var consent = null;
-        try { consent = localStorage.getItem('cookie_consent'); } catch (e) {}
+        function readConsent() {
+            try { return localStorage.getItem('cookie_consent'); } catch (e) { return null; }
+        }
+        function writeConsent(value) {
+            try { localStorage.setItem('cookie_consent', value); } catch (e) {}
+            document.cookie = 'cookie_consent=' + encodeURIComponent(value) + '; path=/; max-age=' + (365 * 24 * 60 * 60) + '; SameSite=Lax';
+        }
+        consent = readConsent();
         if (!consent) {
             setTimeout(function () { banner.classList.add('cookie-banner--visible'); }, 800);
         }
         document.getElementById('cookieAccept').addEventListener('click', function () {
-            try { localStorage.setItem('cookie_consent', 'accepted'); } catch (e) {}
+            writeConsent('accepted');
             banner.classList.remove('cookie-banner--visible');
+            if (typeof window.pkdSetConsent === 'function') {
+                window.pkdSetConsent(true);
+            }
         });
         document.getElementById('cookieDecline').addEventListener('click', function () {
-            try { localStorage.setItem('cookie_consent', 'declined'); } catch (e) {}
+            writeConsent('declined');
             banner.classList.remove('cookie-banner--visible');
+            if (typeof window.pkdSetConsent === 'function') {
+                window.pkdSetConsent(false);
+            }
         });
     })();
     </script>
